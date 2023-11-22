@@ -1,16 +1,19 @@
-import {  useState } from "react";
+import { useState } from "react";
 import SelectWallet from "../SelectWallet";
 import useStore from "../../zustand/store";
-import { disconnect } from "@wagmi/core";
 import { isEmpty } from "lodash";
 import WidgetForm from "../WidgetForm";
+import { useAccount, useBalance, useDisconnect,useNetwork } from "wagmi";
 
 export default function WidgetContainer() {
   const [showWallet, setShowWallet] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState("");
   const walletData = useStore((state) => state.walletData);
   const setWalletData = useStore((state) => state.setWalletData);
-
+  const {address, isConnected } = useAccount();
+  const { chain, chains } = useNetwork()
+  const {data}=useBalance({address})
+  const {disconnect}=useDisconnect()
   function handleShowWallet(val) {
     setShowWallet(val);
   }
@@ -20,7 +23,6 @@ export default function WidgetContainer() {
   }
 
   return (
-   
     <div
       style={{
         width: "442px",
@@ -34,15 +36,17 @@ export default function WidgetContainer() {
       {!showWallet ? (
         <>
           <div>
-            {!isEmpty(walletData) ? (
+            {isConnected ? (
               <>
-                <div style={{fontSize:'12px'}}>Address:{walletData?.address}</div>
-                <div>chain:{walletData?.nativeCurrency?.name}</div>
-                <div>Balance:{walletData?.formatted}</div>
+                <div style={{ fontSize: "12px" }}>
+                  Address:{address}
+                </div>
+                <div>chain:{chain.network}</div>
+                <div>Balance:{data?.formatted}</div>
                 <button
                   onClick={async () => {
                     setWalletData();
-                    await disconnect();
+                     disconnect();
                   }}
                 >
                   Disconnect

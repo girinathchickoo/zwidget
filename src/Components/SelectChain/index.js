@@ -22,6 +22,7 @@ export default function SelectChain({ setData, handleReset, data }) {
               key={i}
             >
               {item}
+             {data?.chain==item? <img width={10} height={10} src="/tick.png" />:<></>}
             </div>
           );
         })}

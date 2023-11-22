@@ -2,13 +2,31 @@ import React, { useEffect, useState } from "react";
 import SelectChain from "../SelectChain";
 import { isEmpty } from "lodash";
 import useStore from "../../zustand/store";
+import { sendTransaction } from "@wagmi/core";
+import { parseEther } from "viem";
 import prepareTx from "./prepareTxn";
+import { useAccount } from "wagmi";
+import { useSendTransaction } from "wagmi";
+import Comp from "../Test"
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [amount, setAmount] = useState("");
   const [from, setFrom] = useState({ chain: "", coin: "" });
+  const { isConnected } = useAccount();
   const [to, setTo] = useState({ chain: "", coin: "" });
   const [showExchangeList, setShowExchangeList] = useState();
   const walletData = useStore((state) => state.walletData);
+  const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
+    to: "0x1b1E919E51a1592Dce70a4FD74107941109B8235",
+    value: (Number(amount) * 1e18).toString(),
+  });
+  useEffect(()=>{
+    fetch("https://api.zelta.io/quotes",{
+      method:"get",
+      headers:{
+        authorization:'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJnaXJpbmF0aGdpcmkyNEBnbWFpbC5jb20iLCJhdXRoIjoiQURNSU4sRVhFQ1VUSVZFLE1BUktFVElORyxTVEFGRixTVVBFUkFETUlOLFVTRVIiLCJleHAiOjE3MDA3NTkwMjF9.pcnSzmcGD4oOSBSDjQA0Xh0oqae2AuPhVRuSgar0rzzOq4Y21QPPGLO9kMKIqIKPf3gJyEolSBcK9MRt84C5-g'
+      }
+    }).then(res=>res.json()).then(res=>{console.log(res)})
+  },[])
   function handleResetList() {
     setShowExchangeList();
   }
@@ -31,8 +49,10 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     ) {
       callTransaction();
     }
-  }, [from,to]);
-  function handleSubmit() {}
+  }, [from, to]);
+  async function handleSubmit() {
+    sendTransaction();
+  }
   return (
     <div>
       {!showExchangeList ? (
@@ -72,12 +92,12 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           </div>
           <button
             onClick={() => {
-              isEmpty(walletData)
+              !isConnected
                 ? handleShowWallet(true)
                 : handleSubmit(selectedWallet);
             }}
           >
-            {!isEmpty(walletData) ? "Exchange" : "Connect Wallet"}
+            {isConnected ? "Exchange" : "Connect Wallet"}
           </button>
         </>
       ) : (

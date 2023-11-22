@@ -1,30 +1,27 @@
 import React from "react";
-import MetamaskWallet from "../MetamaskWallet";
-import WalletConnect from "../WalletConnect";
-import BrowserWallet from "../BowserWallet";
+import { useConnect, useDisconnect } from "wagmi";
 export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
-  const walletList = [
-    <BrowserWallet
-      handleShowWallet={handleShowWallet}
-      handleSetWallet={handleSetWallet}
-    />,
-    <MetamaskWallet
-      handleShowWallet={handleShowWallet}
-      handleSetWallet={handleSetWallet}
-    />,
-    <WalletConnect
-      handleShowWallet={handleShowWallet}
-      handleSetWallet={handleSetWallet}
-    />,
-  ];
-  return walletList.map((item, i) => {
+  const { connectAsync, data, connectors } = useConnect();
+  console.log(data);
+  const { disconnect } = useDisconnect();
+  async function handleConnect(connector) {
+    let result = await connectAsync({ connector });
+    handleSetWallet("metamask");
+    handleShowWallet(false);
+  }
+  return connectors.map((item, i) => {
     return (
-      <div
-        style={{ cursor: "pointer" }}
-        key={i}
-      >
-        {item}
-      </div>
+      <>
+        <button
+          onClick={() => {
+            handleConnect(item);
+          }}
+          style={{ cursor: "pointer" }}
+          key={i}
+        >
+          {item.name}
+        </button>
+      </>
     );
   });
 }

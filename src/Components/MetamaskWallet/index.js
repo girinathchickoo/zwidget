@@ -2,7 +2,7 @@ import { useState } from "react";
 import { connect, getAccount, getNetwork, fetchBalance } from "@wagmi/core";
 
 import useStore from "../../zustand/store";
-import { mainnet, polygon, optimism } from "@wagmi/core/chains";
+import { mainnet, polygon, optimism,goerli,sepolia, polygonMumbai } from "@wagmi/core/chains";
 import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
 import prepareTx from "../WidgetForm/prepareTxn";
 export default function MetamaskWallet({ handleShowWallet, handleSetWallet }) {
@@ -10,29 +10,30 @@ export default function MetamaskWallet({ handleShowWallet, handleSetWallet }) {
   const [isLoading, setIsLoading] = useState(false);
   const walletData = useStore((state) => state.walletData);
   const setWalletData = useStore((state) => state.setWalletData);
-  const connector = new MetaMaskConnector({
-    chains: [mainnet, optimism, polygon],
-  });
+ 
   async function handleMetamaskConnect() {
     try {
-      let result = await connector.connect();
-      console.log(result, connector.getAccount(), "result");
+      const result = await connect({
+        connector: new MetaMaskConnector({
+          chains: [mainnet, optimism,polygon, polygonMumbai,goerli,sepolia],
+        })
+      });
+      console.log(result,'connector')
       let account = { address: result?.account };
       let chain;
-      connector.chains?.forEach((item, i) => {
-        if (result.chain.id == item.id) {
+      result.connector.chains.forEach((item, i) => {
+        if (result.chain?.id == item?.id) {
           chain = item;
         }
       });
       const balance = await fetchBalance({
         address: account.address,
-        chainId: chain.id,
+        chainId: chain?.id,
       });
       setWalletData({
         ...account,
         ...chain,
         ...balance,
-        connector,
       });
       setIsLoading(false);
       handleSetWallet("metamask");
@@ -55,7 +56,7 @@ export default function MetamaskWallet({ handleShowWallet, handleSetWallet }) {
       </button>
       <button
         onClick={() => {
-          prepareTx(connector, walletData);
+          prepareTx( walletData);
         }}
       >
         PrepareTransaction
