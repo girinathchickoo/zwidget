@@ -1,25 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import WidgetContainer from "./Components/WidgetContainer";
+import { createConfig, configureChains } from "@wagmi/core";
+import { publicProvider } from "@wagmi/core/providers/public";
+import { mainnet, polygon, optimism } from "@wagmi/core/chains";
+import { WagmiConfig } from "wagmi";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+const queryClient = new QueryClient();
+function ZWidget() {
+  const { chains, publicClient, webSocketPublicClient } = configureChains(
+    [mainnet, polygon, optimism],
+    [publicProvider()]
+  );
+  const config = createConfig({
+    autoConnect: true,
+    publicClient,
+    webSocketPublicClient,
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <WidgetContainer />
   );
 }
 
-export default App;
+export default ZWidget;
