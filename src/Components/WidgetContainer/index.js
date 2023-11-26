@@ -25,9 +25,9 @@ export default function WidgetContainer() {
   return (
     <div
       style={{
-        width: "442px",
-        height: "550px",
-        background: "#0F0F0F",
+        width: "443px",
+        minHeight: "400px",
+        background: "#FFFFFF",
         margin: "auto",
         borderRadius: "16px",
         padding: "20px",

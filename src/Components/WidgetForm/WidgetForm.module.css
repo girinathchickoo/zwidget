@@ -1,0 +1,8 @@
+
+
+.gradientborder{
+    background: linear-gradient(to right,#A45EFF , #2CFFE4 50%);
+}
+.gradientbutton{
+    background: linear-gradient(to right,rgba(225, 250, 110, 1) 0%, rgba(0, 255, 255, 1) 100%);
+}
