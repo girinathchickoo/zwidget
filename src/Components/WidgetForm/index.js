@@ -27,10 +27,21 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const publicClient = usePublicClient();
   console.log(publicClient, "client");
   const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
-    value: (Number(amount) * 1e18).toString(),
+    value: 0,
     ...txnBodyData?.data?.[0]?.txnEvm,
-    gasPrice: 99952590952n,
-    gasLimit: 40090n,
+    gasPrice: txnBodyData?.gasPrice,
+    gasLimit: txnBodyData?.gasLimit,
+  });
+  const {
+    data: data1,
+    isLoading: isLoading1,
+    isSuccess: isSuccess1,
+    sendTransaction: sendTransaction1,
+  } = useSendTransaction({
+    value: 0,
+    ...txnBodyData?.data?.[1]?.txnEvm,
+    gasPrice: txnBodyData?.gasPrice,
+    gasLimit: txnBodyData?.gasLimit,
   });
   const routes = useQuery(
     ["routes", selectedWallet?.address],
@@ -49,12 +60,13 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           : false,
     }
   );
+  console.log(data, "txdta");
   const txnBody = useQuery(
     "txnbody",
     async () => {
       console.log("called");
       let res = await controllers.fetchTxnBody(
-        `/createTx?fromChainId=137&toChainId=137&fromAssetAddress=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&toAssetAddress=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&inputAmount=50&&recipient=${selectedWallet?.address}&routeId=${routes.data?.routes?.[0]?.[0]?.routeId}`
+        `/createTx?fromChainId=137&toChainId=137&fromAssetAddress=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&toAssetAddress=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&inputAmount=50&recipient=${selectedWallet?.address}&routeId=${routes.data?.routes?.[0]?.[0]?.routeId}`
       );
       return await res.json();
     },
@@ -62,16 +74,31 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     {
       enabled: callTxn,
       onSuccess: async (data) => {
-        let gasLimit = await publicClient.estimateGas({
+        // let gasLimit = await publicClient.estimateGas({
+        //   account: selectedWallet?.address,
+        //   ...data?.result?.[0]?.txnEvm,
+        // });
+        // let gasPrice = await publicClient.getGasPrice({
+        //   account: selectedWallet?.address,
+        //   ...data?.result?.[0]?.txnEvm,
+        // });
+        // setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
+        // sendTransaction();
+        let gasLimit1 = await publicClient.estimateGas({
           account: selectedWallet?.address,
-          ...data?.result?.[0]?.txnEvm,
+          ...data?.result?.[1]?.txnEvm,
         });
-        let gasPrice = await publicClient.getGasPrice({
+        let gasPrice1 = await publicClient.getGasPrice({
           account: selectedWallet?.address,
-          ...data?.result?.[0]?.txnEvm,
+          ...data?.result?.[1]?.txnEvm,
         });
-        setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
-        sendTransaction();
+        console.log(gasPrice1, gasLimit1, txnBodyData, "pric1");
+        setTxnBodyData({
+          data: data?.result,
+          gasPrice: gasPrice1,
+          gasLimit: gasLimit1,
+        });
+        sendTransaction1();
         setCallTxn(false);
       },
       onError: () => {
@@ -115,7 +142,6 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   }, [fromChain, toChain, toCoin, fromCoin]);
   async function handleSubmit() {
     setCallTxn(true);
-    // sendTransaction();
   }
   console.log(routes, "routes");
   return (
