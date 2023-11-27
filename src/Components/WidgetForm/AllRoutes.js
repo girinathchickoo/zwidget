@@ -1,9 +1,10 @@
 import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
+import Step from "./Step";
 
 export default function AllRoutes({ fromChain, routes, handleShowAllRoutes }) {
   return (
-    <div>
+    <div >
       <div className="flex relative justify-center mb-2">
         <button
           onClick={() => {
@@ -81,13 +82,11 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes }) {
                         <img src="/gas.svg" width={14} height={14} alt="img" />
                         <p>{truncate(item.fee?.[1]?.amountInEther, 4) || 0}</p>
                       </div>
+                      <Step step={item.steps.length} />
+                      
                       <div className="flex items-center gap-x-1">
                         <img src="/time.svg" width={14} height={14} alt="img" />
-                        <p>{"1 Step"}</p>
-                      </div>
-                      <div className="flex items-center gap-x-1">
-                        <img src="/time.svg" width={14} height={14} alt="img" />
-                        <p>{"21min"}</p>
+                        <p>{`${item.deadline}min`}</p>
                       </div>
                     </div>
                   </div>

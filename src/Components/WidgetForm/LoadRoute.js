@@ -1,5 +1,6 @@
 import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
+import Step from "./Step";
 
 export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
   return (
@@ -15,7 +16,7 @@ export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
             Loading Route...
           </div>
         </>
-      ) : routes.data ? (
+      ) : true ? (
         <>
           <div className="flex justify-between items-center">
             <p className="text-sm font-normal  text-text-search">Route</p>
@@ -40,7 +41,8 @@ export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
                 className="object-cover min-w-[8px] min-h-[8px] "
               />
             </RoundedButton>
-
+            <div className="absolute  gap-x-1 right-2 bottom-1 text-xs font-normal text-text-primary">
+           <Step step={routes.data?.routes?.[0]?.[0]?.steps?.length} provider={routes.data?.routes?.[0]?.[0]?.provider} /></div>
             <div className="w-[129px] bg-background-container absolute bottom-[-10%] text-transparent text-sm font-normal  h-[22px] rounded-xl border border-border-green1">
               <div className=" w-full h-full bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF]  flex justify-center items-center  bg-clip-text  rounded-xl">
                 Recommended
@@ -77,7 +79,7 @@ export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
               </div>
               <div className="flex items-center gap-x-1">
                 <img src="/time.svg" width={14} height={14} alt="img" />
-                <p>{"21min"}</p>
+                <p>{`${routes.data?.routes?.[0]?.[0]?.deadline}min`}</p>
               </div>
             </div>
           </div>

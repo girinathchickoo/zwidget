@@ -4,7 +4,18 @@ import controllers from "../../Actions/Controllers";
 import ShowMoreNetworks from "./ShowMoreNetworks";
 import styles from "./Selectchain.module.css";
 import COLOR_PALLETTE from "../../Constants/theme/colors";
-export default function SelectChain({ setChainData,setCoinData, handleReset, chainData,coinData }) {
+export default function SelectChain({
+  setChainData,
+  setCoinData,
+  handleReset,
+  chainData,
+  coinData,
+  fromCoin,
+  toCoin,
+  fromChain,
+  toChain,
+  showExchangeList,
+}) {
   const [showMoreNetwork, setShowMoreNetwork] = useState(false);
   const [value, setValue] = useState("");
   const fetchChains = useQuery(
@@ -34,8 +45,8 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
   //     // handleReset();
   //   }
   // }, [data]);
-  function handleClosePopup(chainData,coinData) {
-    console.log(chainData,coinData,"datas")
+  function handleClosePopup(chainData, coinData) {
+    console.log(chainData, coinData, "datas");
     if (chainData.chain?.length && coinData?.coin?.length) {
       handleReset();
     }
@@ -44,9 +55,10 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
     setShowMoreNetwork(false);
   }
   function handleSetChainData(data) {
-    console.log(data,'set')
+    console.log(data, "set");
     setChainData(data);
   }
+  console.log(fromChain, toChain, "chsin");
   return showMoreNetwork ? (
     <ShowMoreNetworks
       handleSetChainData={handleSetChainData}
@@ -62,8 +74,8 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
           <button
             onClick={() => {
               handleReset();
-              if (!coinData.coin.length || !chainData.chain.length){
-                setCoinData({ coin: ""});
+              if (!coinData.coin.length || !chainData.chain.length) {
+                setCoinData({ coin: "" });
                 setChainData({ chain: "" });
               }
             }}
@@ -75,7 +87,7 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
         </div>
         <div className="flex flex-wrap gap-x-2 gap-y-5 overflow-y-auto">
           {fetchChains?.data?.slice(0, 9).map((item, i) => {
-            console.log(chainData.name,item.name)
+            console.log(chainData.name, item.name);
             return (
               <div
                 className={` ${
@@ -172,11 +184,34 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
             .map((item, i) => {
               return (
                 <div
-                  className="py-2 cursor-pointer border-b border-border-primary"
+                  className={`py-2 cursor-pointer border-b border-border-primary ${
+                    (fromCoin.coinKey == item.coinKey &&
+                      toChain.name == fromChain.name) ||
+                    (toCoin.coinKey == item.coinKey &&
+                      toChain.name == fromChain.name)
+                      ? "pointer-events-none opacity-60"
+                      : ""
+                  }
+                  }`}
                   onClick={() => {
                     let newObj = { ...coinData, coin: item.coinKey, ...item };
                     setCoinData(newObj);
-                    handleClosePopup(chainData,newObj);
+                    if (
+                      showExchangeList == "from" &&
+                      toCoin.coinKey !== item.coinKey
+                    ) {
+                      handleClosePopup(chainData, newObj);
+                      setCoinData(newObj);
+                    } else if (
+                      showExchangeList == "to" &&
+                      fromCoin.coinKey !== item.coinKey
+                    ) {
+                      handleClosePopup(chainData, newObj);
+                      setCoinData(newObj);
+                    } else if (toChain.name !== fromChain.name) {
+                      handleClosePopup(chainData, newObj);
+                      setCoinData(newObj);
+                    }
                   }}
                   key={i}
                 >
