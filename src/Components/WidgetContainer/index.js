@@ -3,17 +3,16 @@ import SelectWallet from "../SelectWallet";
 import useStore from "../../zustand/store";
 import { isEmpty } from "lodash";
 import WidgetForm from "../WidgetForm";
-import { useAccount, useBalance, useDisconnect,useNetwork } from "wagmi";
+import { useAccount, useBalance, useDisconnect, useNetwork } from "wagmi";
 
 export default function WidgetContainer() {
   const [showWallet, setShowWallet] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState("");
-  const walletData = useStore((state) => state.walletData);
   const setWalletData = useStore((state) => state.setWalletData);
-  const {address, isConnected } = useAccount();
-  const { chain, chains } = useNetwork()
-  const {data}=useBalance({address})
-  const {disconnect}=useDisconnect()
+  const { address, isConnected } = useAccount();
+  const { chain, chains } = useNetwork();
+  const { data } = useBalance({ address });
+  const { disconnect } = useDisconnect();
   function handleShowWallet(val) {
     setShowWallet(val);
   }
@@ -21,7 +20,11 @@ export default function WidgetContainer() {
   function handleSetWallet(wallet) {
     setSelectedWallet(wallet);
   }
-
+  let walletData = {
+    address,
+    chain,
+    data,
+  };
   return (
     <div
       style={{
@@ -38,15 +41,13 @@ export default function WidgetContainer() {
           <div>
             {isConnected ? (
               <>
-                <div style={{ fontSize: "12px" }}>
-                  Address:{address}
-                </div>
+                <div style={{ fontSize: "12px" }}>Address:{address}</div>
                 <div>chain:{chain.network}</div>
                 <div>Balance:{data?.formatted}</div>
                 <button
                   onClick={async () => {
                     setWalletData();
-                     disconnect();
+                    disconnect();
                   }}
                 >
                   Disconnect
@@ -58,7 +59,7 @@ export default function WidgetContainer() {
           </div>
           <div>
             <WidgetForm
-              selectedWallet={selectedWallet}
+              selectedWallet={walletData}
               handleShowWallet={handleShowWallet}
             />
           </div>

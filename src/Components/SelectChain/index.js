@@ -62,9 +62,8 @@ export default function SelectChain({ setChainData,setCoinData, handleReset, cha
           <button
             onClick={() => {
               handleReset();
-              if (!coinData.coin.length ){
+              if (!coinData.coin.length || !chainData.chain.length){
                 setCoinData({ coin: ""});
-              }if(!chainData.chain.length) {
                 setChainData({ chain: "" });
               }
             }}

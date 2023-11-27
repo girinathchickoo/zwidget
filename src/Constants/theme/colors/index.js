@@ -4,7 +4,9 @@ const COLOR_PALLETTE={
         form:"#6F7473",
         button:'#FFFFFF',
         search:"#6F7473",
-        selected:"#4c4c4c"
+        selected:"#4c4c4c",
+        loading:'#A1A1A1',
+        route:"#4c4c4c"
 
     },
     background:{
@@ -20,7 +22,8 @@ const COLOR_PALLETTE={
     border:{
         primary:"#E9E9E9",
         secondary:"#808080",
-        green:'#9FC966'
+        green:'#9FC966',
+        green1:"#81DCCA"
     }
 }
 

@@ -7,10 +7,14 @@ const controllers = {
   async fetchTokens(id) {
     return await fetch(`${config.BACKEND}/tokens?chainId=${id}`);
   },
-  async fetchRoutes() {
+  async fetchRoutes(recipient,id) {
     return await fetch(
-      `${config.BACKEND}/quotes?fromChainId=137&toChainId=1&fromAssetAddress=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&toAssetAddress=0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48&inputAmount=50`
+      `${config.BACKEND}/quotes?fromChainId=137&toChainId=137&fromAssetAddress=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&toAssetAddress=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&inputAmount=50&outputAmount=50&recipient=${recipient}`
     );
+  },
+  async fetchTxnBody(params) {
+    console.log(`${config.BACKEND}${params}`)
+    return await fetch(`${config.BACKEND + params}`)
   },
 };
 
