@@ -3,7 +3,7 @@ import SelectChain from "../SelectChain";
 import useStore from "../../zustand/store";
 import prepareTx from "./prepareTxn";
 import { useAccount } from "wagmi";
-import { useSendTransaction, usePublicClient, use } from "wagmi";
+import { useSendTransaction, usePublicClient } from "wagmi";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./WidgetForm.module.css";
 import { useQuery } from "react-query";
@@ -27,11 +27,9 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const publicClient = usePublicClient();
   console.log(publicClient, "client");
   const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
-    value: 10,
 
-    ...txnBodyData?.data?.[1]?.txnEvm,
-    from: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-    to: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      value: 10,
+      ...txnBodyData?.data?.[1]?.txnEvm,
     // gasPrice: txnBodyData?.gasPrice,
     // gasLimit: txnBodyData?.gasLimit,
   });
@@ -78,11 +76,11 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       onSuccess: async (data) => {
         let gasLimit = await publicClient.estimateGas({
           account: selectedWallet?.address,
-          ...data?.result?.[1]?.txnEvm,
+          ...data?.result?.[0]?.txnEvm,
         });
         let gasPrice = await publicClient.getGasPrice({
           account: selectedWallet?.address,
-          ...data?.result?.[1]?.txnEvm,
+          ...data?.result?.[0]?.txnEvm,
         });
         setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
         sendTransaction();
@@ -114,7 +112,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   }
   function handleChain(data) {
     if (showExchangeList == "from") {
-    setFromChain({ ...fromChain, ...data });
+      setFromChain({ ...fromChain, ...data });
     } else if (showExchangeList == "to") {
       setToChain({ ...toChain, ...data });
     }
@@ -342,6 +340,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
             showExchangeList={showExchangeList}
             fromChain={fromChain}
             toChain={toChain}
+            selectedWallet={selectedWallet}
           />
         )
       ) : (

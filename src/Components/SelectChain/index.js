@@ -15,6 +15,7 @@ export default function SelectChain({
   fromChain,
   toChain,
   showExchangeList,
+  selectedWallet
 }) {
   const [showMoreNetwork, setShowMoreNetwork] = useState(false);
   const [value, setValue] = useState("");
@@ -40,6 +41,12 @@ export default function SelectChain({
     let res = await controllers.fetchTokens(chainData.chainId);
     return await res.json();
   });
+  const fetchBalance=useQuery(["balance",selectedWallet?.address],async()=>{
+    let res=await controllers.fetchBalance(selectedWallet?.address)
+    return await res.json()
+  },{
+    enabled:selectedWallet?.address?true:false
+  })
   // useEffect(() => {
   //   if (data.chain.length && data.coin.length) {
   //     // handleReset();
@@ -51,6 +58,7 @@ export default function SelectChain({
       handleReset();
     }
   }
+  console.log(fetchBalance,"bal")
   function handleBack() {
     setShowMoreNetwork(false);
   }
@@ -182,9 +190,10 @@ export default function SelectChain({
               );
             })
             .map((item, i) => {
+              console.log(fetchBalance.data?.evm?.[chainData.chainId]?.[item.address.toLowerCase()]?.balance,item,item.address?.toLowerCase(),chainData.chainId)
               return (
                 <div
-                  className={`py-2 cursor-pointer border-b border-border-primary ${
+                  className={`py-2 flex items-center justify-between cursor-pointer border-b border-border-primary ${
                     (fromCoin.coinKey == item.coinKey &&
                       toChain.name == fromChain.name) ||
                     (toCoin.coinKey == item.coinKey &&
@@ -242,6 +251,9 @@ export default function SelectChain({
                         {chainData.name}
                       </p>
                     </div>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-text-form">{fetchBalance.data?.evm?.[chainData.chainId]?.[item.address.toLowerCase()]?.balance/Math.pow(10,6)||""}</p>
                   </div>
                 </div>
               );

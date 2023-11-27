@@ -16,16 +16,16 @@ export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
             Loading Route...
           </div>
         </>
-      ) : true ? (
+      ) : routes.data ? (
         <>
           <div className="flex justify-between items-center">
             <p className="text-sm font-normal  text-text-search">Route</p>
-            <div
+           {routes.data?.routes?.[0]?.length - 1>2?<div
               onClick={handleShowAllRoutes}
               className="text-sm font-normal cursor-pointer hover:opacity-60 bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF] bg-clip-text text-transparent"
             >
               Show All +{routes.data?.routes?.[0]?.length - 1} Routes
-            </div>
+            </div>:<></>}
           </div>
           <div className="bg-background-form relative flex flex-col pt-1 pb-6 items-center justify-center border border-border-primary">
             <RoundedButton
@@ -42,7 +42,11 @@ export default function LoadRoute({ routes, fromChain, handleShowAllRoutes }) {
               />
             </RoundedButton>
             <div className="absolute  gap-x-1 right-2 bottom-1 text-xs font-normal text-text-primary">
-           <Step step={routes.data?.routes?.[0]?.[0]?.steps?.length} provider={routes.data?.routes?.[0]?.[0]?.provider} /></div>
+              <Step
+                step={routes.data?.routes?.[0]?.[0]?.steps?.length}
+                provider={routes.data?.routes?.[0]?.[0]?.provider}
+              />
+            </div>
             <div className="w-[129px] bg-background-container absolute bottom-[-10%] text-transparent text-sm font-normal  h-[22px] rounded-xl border border-border-green1">
               <div className=" w-full h-full bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF]  flex justify-center items-center  bg-clip-text  rounded-xl">
                 Recommended
