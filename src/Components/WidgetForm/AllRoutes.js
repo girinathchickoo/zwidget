@@ -28,7 +28,7 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                 handleShowAllRoutes()
               }} className="mb-4">
                 <div
-                  className={`bg-background-form cursor-pointer flex flex-col items-center px-6 relative  pt-3 pb-6  ${
+                  className={`bg-background-form cursor-pointer  flex flex-col items-center px-6 relative  pt-3 pb-6  ${
                     i == 0 ? "border" : "bodrder-0"
                   } border-border-primary`}
                 >
@@ -55,11 +55,11 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                   ) : (
                     <></>
                   )}
-                  <div className="flex w-full justify-between items-center">
-                    <p className="text-lg w-max font-medium text-text-route">
-                    {item.minOutputAmount}
+                  <div className="flex w-full  justify-between items-center">
+                    <p className="text-lg w-[40%] break-words font-medium text-text-route">
+                    {truncate(item.minOutputAmount,4)}
                     </p>
-                    <div className="flex  items-center gap-x-2">
+                    <div className="flex  w-[60%] items-center gap-x-2">
                       <img
                         src={fromChain.image}
                         className="rounded-[50%]"
@@ -72,14 +72,14 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                     </div>
                   </div>
                   <div className="flex justify-between w-full items-center">
-                    <div className="flex items-center gap-x-1">
+                    <div className="flex w-[40%] items-center gap-x-1">
                       <div className="flex flex-col  justify-center items-center w-max gap-y-1">
                         <p className="leading-[0px] p-0">~</p>
                         <p className="leading-[0px] p-0">-</p>
                       </div>
-                      <p className="text-text-primary">$ {item.minOutputAmount*convertVal}</p>
+                      <p className="text-text-primary">$ {truncate(item.minOutputAmount*convertVal,2)}</p>
                     </div>
-                    <div className="text-sm flex items-center gap-x-2 font-medium text-text-primary">
+                    <div className="text-sm w-[60%] flex items-center gap-x-2 font-medium text-text-primary">
                       <div className="flex items-center gap-x-1">
                         <img src="/gas.svg" width={14} height={14} alt="img" />
                         <p>$ {truncate(item.fee?.[1]?.amountInUSD, 4) || 0}</p>

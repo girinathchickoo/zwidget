@@ -80,7 +80,7 @@ export default function LoadRoute({
                   <p className="leading-[0px] p-0">~</p>
                   <p className="leading-[0px] p-0">-</p>
                 </div>
-                <p>$ {price}</p>
+                <p>$ {truncate(price,2)}</p>
               </div>
               <div className="flex items-center gap-x-1">
                 <img src="/gas.svg" width={14} height={14} alt="img" />

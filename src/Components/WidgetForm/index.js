@@ -16,7 +16,6 @@ import LoadRoute from "./LoadRoute";
 import AllRoutes from "./AllRoutes";
 import truncate from "../../utils/truncate";
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
-  console.log(selectedWallet, "wallet");
   const [amount, setAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [fromChain, setFromChain] = useState({ chain: "" });
@@ -94,11 +93,11 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     }
   );
   const txnBody = useQuery(
-    "txnbody",
+    ["txnbody", fromChain, toChain, fromCoin, toCoin, amount, routesData,selectedWallet?.address],
     async () => {
       console.log("called");
       let res = await controllers.fetchTxnBody(
-        `/createTx?fromChainId=137&toChainId=137&fromAssetAddress=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&toAssetAddress=0xc2132D05D31c914a87C6611C10748AEb04B58e8F&inputAmount=50&recipient=${selectedWallet?.address}&routeId=${routes.data?.routes?.[0]?.[0]?.routeId}`
+        `/createTx?fromChainId=${fromChain?.chainId}&toChainId=${toChain?.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${amount}&recipient=${selectedWallet?.address}&routeId=${routesData.routeId}`
       );
       return await res.json();
     },
