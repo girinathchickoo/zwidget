@@ -2,7 +2,7 @@ import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 
-export default function AllRoutes({ fromChain, routes, handleShowAllRoutes }) {
+export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handleRoutesData }) {
   return (
     <div >
       <div className="flex relative justify-center mb-2">
@@ -24,7 +24,9 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes }) {
         <div className="h-[500px] overflow-y-auto">
           {routes.data?.routes?.[0]?.map((item, i) => {
             return (
-              <div className="mb-4">
+              <div onClick={()=>{handleRoutesData(item) 
+                handleShowAllRoutes()
+              }} className="mb-4">
                 <div
                   className={`bg-background-form cursor-pointer flex flex-col items-center px-6 relative  pt-3 pb-6  ${
                     i == 0 ? "border" : "bodrder-0"
@@ -55,7 +57,7 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes }) {
                   )}
                   <div className="flex w-full justify-between items-center">
                     <p className="text-lg w-max font-medium text-text-route">
-                      1982.2915
+                    {item.minOutputAmount}
                     </p>
                     <div className="flex  items-center gap-x-2">
                       <img

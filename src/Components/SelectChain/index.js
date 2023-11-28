@@ -3,7 +3,6 @@ import { useQuery } from "react-query";
 import controllers from "../../Actions/Controllers";
 import ShowMoreNetworks from "./ShowMoreNetworks";
 import styles from "./Selectchain.module.css";
-import COLOR_PALLETTE from "../../Constants/theme/colors";
 export default function SelectChain({
   setChainData,
   setCoinData,
@@ -15,7 +14,7 @@ export default function SelectChain({
   fromChain,
   toChain,
   showExchangeList,
-  selectedWallet
+  selectedWallet,
 }) {
   const [showMoreNetwork, setShowMoreNetwork] = useState(false);
   const [value, setValue] = useState("");
@@ -26,7 +25,6 @@ export default function SelectChain({
       return await res.json();
     },
     {
-      enabled: !coinData.coin.length && !chainData.chain.length,
       onSuccess: (datas) => {
         let obj = {};
         datas.forEach((item) => {
@@ -41,12 +39,16 @@ export default function SelectChain({
     let res = await controllers.fetchTokens(chainData.chainId);
     return await res.json();
   });
-  const fetchBalance=useQuery(["balance",selectedWallet?.address],async()=>{
-    let res=await controllers.fetchBalance(selectedWallet?.address)
-    return await res.json()
-  },{
-    enabled:selectedWallet?.address?true:false
-  })
+  const fetchBalance = useQuery(
+    ["balance", selectedWallet?.address],
+    async () => {
+      let res = await controllers.fetchBalance(selectedWallet?.address);
+      return await res.json();
+    },
+    {
+      enabled: selectedWallet?.address ? true : false,
+    }
+  );
   // useEffect(() => {
   //   if (data.chain.length && data.coin.length) {
   //     // handleReset();
@@ -58,7 +60,7 @@ export default function SelectChain({
       handleReset();
     }
   }
-  console.log(fetchBalance,"bal")
+  console.log(fetchBalance, "bal");
   function handleBack() {
     setShowMoreNetwork(false);
   }
@@ -190,30 +192,50 @@ export default function SelectChain({
               );
             })
             .map((item, i) => {
-              console.log(fetchBalance.data?.evm?.[chainData.chainId]?.[item.address.toLowerCase()]?.balance,item,item.address?.toLowerCase(),chainData.chainId)
+              console.log(
+                showExchangeList == "to",
+                fromCoin.coinKey !== item.coinKey,
+                fromCoin.name !== item.name,
+                fromCoin.coinKey,
+                item.coinKey,
+                item.name,
+                fromCoin.name,
+                i,
+                "click"
+              );
               return (
                 <div
-                  className={`py-2 flex items-center justify-between cursor-pointer border-b border-border-primary ${
-                    (fromCoin.coinKey == item.coinKey &&
-                      toChain.name == fromChain.name) ||
-                    (toCoin.coinKey == item.coinKey &&
-                      toChain.name == fromChain.name)
-                      ? "pointer-events-none opacity-60"
-                      : ""
+                  className={`py-2
+                  ${
+                    showExchangeList == "from" &&
+                    // toCoin.coinKey !== item.coinKey &&
+                    toCoin.name !== item.name
+                      ? ""
+                      : showExchangeList == "to" &&
+                        // fromCoin.coinKey !== item.coinKey &&
+                        fromCoin.name !== item.name
+                      ? ""
+                      : toChain.name !== fromChain.name
+                      ? ""
+                      : "pointer-events-none opacity-60"
                   }
+                   flex items-center justify-between cursor-pointer border-b border-border-primary
+                   
                   }`}
                   onClick={() => {
                     let newObj = { ...coinData, coin: item.coinKey, ...item };
                     setCoinData(newObj);
                     if (
                       showExchangeList == "from" &&
-                      toCoin.coinKey !== item.coinKey
+                      // toCoin.coinKey !== item.coinKey &&
+                      toCoin.name !== item.name
                     ) {
                       handleClosePopup(chainData, newObj);
                       setCoinData(newObj);
                     } else if (
                       showExchangeList == "to" &&
-                      fromCoin.coinKey !== item.coinKey
+                      // fromCoin.coinKey !== item.coinKey &&
+                      fromCoin.name !== item.name
                     ) {
                       handleClosePopup(chainData, newObj);
                       setCoinData(newObj);
@@ -253,7 +275,11 @@ export default function SelectChain({
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-text-form">{fetchBalance.data?.evm?.[chainData.chainId]?.[item.address.toLowerCase()]?.balance/Math.pow(10,6)||""}</p>
+                    <p className="text-sm font-medium text-text-form">
+                      {fetchBalance.data?.evm?.[chainData.chainId]?.[
+                        item.address.toLowerCase()
+                      ]?.balance / Math.pow(10, 6) || ""}
+                    </p>
                   </div>
                 </div>
               );

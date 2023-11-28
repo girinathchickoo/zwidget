@@ -3,7 +3,11 @@ import SelectChain from "../SelectChain";
 import useStore from "../../zustand/store";
 import prepareTx from "./prepareTxn";
 import { useAccount } from "wagmi";
-import { useSendTransaction, usePublicClient } from "wagmi";
+import {
+  useSendTransaction,
+  usePublicClient,
+  usePrepareSendTransaction,
+} from "wagmi";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./WidgetForm.module.css";
 import { useQuery } from "react-query";
@@ -23,15 +27,19 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [showAllRoutes, setShowAllRoutes] = useState(false);
   const [isSwap, setIsSwap] = useState(false);
   const [callTxn, setCallTxn] = useState(false);
+  const [routesData,setRoutesData]=useState([])
   const [txnBodyData, setTxnBodyData] = useState();
   const publicClient = usePublicClient();
-  console.log(publicClient, "client");
+  const prepare = usePrepareSendTransaction({
+    to: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+    value: 10,
+  });
+  console.log(prepare.error, "prepare");
   const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
-
-      value: 10,
-      ...txnBodyData?.data?.[1]?.txnEvm,
-    // gasPrice: txnBodyData?.gasPrice,
-    // gasLimit: txnBodyData?.gasLimit,
+    value: 10,
+    ...txnBodyData?.data?.[1]?.txnEvm,
+    gasPrice: txnBodyData?.gasPrice,
+    gasLimit: txnBodyData?.gasLimit,
   });
   // const {
   //   data: data1,
@@ -44,10 +52,21 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   //   gasPrice: txnBodyData?.gasPrice,
   //   gasLimit: txnBodyData?.gasLimit,
   // });
+
+  useEffect(()=>{
+    fetch('https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xdAC17F958D2ee523a2206206994597C13D831ec7&vs_currencies=usd').then(res=>res.json()).then(res=>res)
+  },[])
   const routes = useQuery(
-    ["routes", selectedWallet?.address],
+    ["routes", selectedWallet?.address, fromChain, toChain, fromCoin, toCoin],
     async () => {
-      let res = await controllers.fetchRoutes(selectedWallet?.address);
+      let res = await controllers.fetchRoutes(
+        selectedWallet?.address,
+        fromChain,
+        toChain,
+        fromCoin,
+        toCoin,
+        amount
+      );
       return res.json();
     },
     {
@@ -59,6 +78,9 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
         toCoin.coin.length
           ? true
           : false,
+      onSuccess: (data) => {
+        setRoutesData(data.routes?.[0]?.[0] || [], "routesd");
+      },
     }
   );
   const txnBody = useQuery(
@@ -144,6 +166,9 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     setCallTxn(true);
   }
   console.log(routes, "routes");
+  function handleRoutesData(data){
+    setRoutesData(data)
+  }
   return (
     <div className="relative">
       {!showAllRoutes ? (
@@ -315,6 +340,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                 routes={routes}
                 handleShowAllRoutes={handleShowAllRoutes}
                 fromChain={fromChain}
+                routesData={routesData}
               />
             </div>
             <button
@@ -348,6 +374,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           routes={routes}
           fromChain={fromChain}
           handleShowAllRoutes={handleShowAllRoutes}
+          handleRoutesData={handleRoutesData}
         />
       )}
     </div>

@@ -7,7 +7,7 @@ export default function RoundedButton({
   return (
     <button
       onClick={() => {
-        callback();
+       callback && callback();
       }}
       className={`${classnames} hover:opacity-70 rounded-[50%] p-2`}
       style={{ ...styles }}
