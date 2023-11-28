@@ -2,7 +2,7 @@ import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 
-export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handleRoutesData }) {
+export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handleRoutesData,convertVal }) {
   return (
     <div >
       <div className="flex relative justify-center mb-2">
@@ -67,7 +67,7 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                         height={18}
                       />
                       <p className="text-sm font-normal my-1 text-text-primary">
-                        {fromChain?.name}
+                      {item?.protocolsUsed.map((item,i,arr)=>{return i==arr.length-1?item:`${item+" & "}`})} via {item?.provider||""}
                       </p>
                     </div>
                   </div>
@@ -77,12 +77,12 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                         <p className="leading-[0px] p-0">~</p>
                         <p className="leading-[0px] p-0">-</p>
                       </div>
-                      <p className="text-text-primary">$ 1920.68</p>
+                      <p className="text-text-primary">$ {item.minOutputAmount*convertVal}</p>
                     </div>
                     <div className="text-sm flex items-center gap-x-2 font-medium text-text-primary">
                       <div className="flex items-center gap-x-1">
                         <img src="/gas.svg" width={14} height={14} alt="img" />
-                        <p>{truncate(item.fee?.[1]?.amountInEther, 4) || 0}</p>
+                        <p>$ {truncate(item.fee?.[1]?.amountInUSD, 4) || 0}</p>
                       </div>
                       <Step step={item.steps.length} />
                       

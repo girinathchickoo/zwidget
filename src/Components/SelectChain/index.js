@@ -18,6 +18,7 @@ export default function SelectChain({
 }) {
   const [showMoreNetwork, setShowMoreNetwork] = useState(false);
   const [value, setValue] = useState("");
+
   const fetchChains = useQuery(
     "chains",
     async function () {
@@ -192,17 +193,6 @@ export default function SelectChain({
               );
             })
             .map((item, i) => {
-              console.log(
-                showExchangeList == "to",
-                fromCoin.coinKey !== item.coinKey,
-                fromCoin.name !== item.name,
-                fromCoin.coinKey,
-                item.coinKey,
-                item.name,
-                fromCoin.name,
-                i,
-                "click"
-              );
               return (
                 <div
                   className={`py-2
@@ -222,8 +212,17 @@ export default function SelectChain({
                    flex items-center justify-between cursor-pointer border-b border-border-primary
                    
                   }`}
-                  onClick={() => {
-                    let newObj = { ...coinData, coin: item.coinKey, ...item };
+                  onClick={async () => {
+                    let newObj = {
+                      ...coinData,
+                      coin: item.coinKey,
+                      ...item,
+                      availBal:
+                        fetchBalance.data?.evm?.[chainData.chainId]?.[
+                          item.address.toLowerCase()
+                        ]?.balance / Math.pow(10, 6),
+                    };
+
                     setCoinData(newObj);
                     if (
                       showExchangeList == "from" &&

@@ -29,7 +29,7 @@ export default function Step({ step, provider }) {
           />
         </svg>
       </div>
-      {`${step} step ${provider ? "via" + " " + provider : ""}`}
+      {`${step} step`}
     </div>
   );
 }

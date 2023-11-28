@@ -7,7 +7,7 @@ export default function LoadRoute({
   routes,
   fromChain,
   handleShowAllRoutes,
-  routesData,
+  routesData,price
 }) {
   return (
     <div className="mt-4">
@@ -29,7 +29,7 @@ export default function LoadRoute({
               <p className="text-sm font-normal text-text-search">Route</p>
               <img src="/routeicon.svg" width={13} height={9} alt="img" />
             </div>
-            {routes.data?.routes?.[0]?.length - 1 > 2 ? (
+            {routes.data?.routes?.[0]?.length - 1 > 0 ? (
               <div
                 onClick={handleShowAllRoutes}
                 className="text-sm font-normal cursor-pointer hover:opacity-60 bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF] bg-clip-text text-transparent"
@@ -71,8 +71,8 @@ export default function LoadRoute({
                 height={18}
               />
               <p className="text-sm font-normal my-1 text-text-primary">
-                {fromChain?.name}
-              </p>
+                On{" "}
+                {routesData?.protocolsUsed.map((item,i,arr)=>{return i==arr.length-1?item:`${item+" & "}`})} via {routesData?.provider||""}</p>
             </div>
             <div className="text-sm flex items-center gap-x-2 font-medium text-text-primary">
               <div className="flex items-center gap-x-1">
@@ -80,11 +80,11 @@ export default function LoadRoute({
                   <p className="leading-[0px] p-0">~</p>
                   <p className="leading-[0px] p-0">-</p>
                 </div>
-                <p>$ 1920.68</p>
+                <p>$ {price}</p>
               </div>
               <div className="flex items-center gap-x-1">
                 <img src="/gas.svg" width={14} height={14} alt="img" />
-                <p>{truncate(routesData?.fee?.[1]?.amountInEther, 4) || 0}</p>
+                <p>$ {truncate(routesData?.fee?.[1]?.amountInUSD, 4) || 0}</p>
               </div>
               <div className="flex items-center gap-x-1">
                 <img src="/time.svg" width={14} height={14} alt="img" />

@@ -14,9 +14,11 @@ import { useQuery } from "react-query";
 import controllers from "../../Actions/Controllers";
 import LoadRoute from "./LoadRoute";
 import AllRoutes from "./AllRoutes";
+import truncate from "../../utils/truncate";
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   console.log(selectedWallet, "wallet");
   const [amount, setAmount] = useState("");
+  const [toAmount, setToAmount] = useState("");
   const [fromChain, setFromChain] = useState({ chain: "" });
   const [fromCoin, setFromCoin] = useState({ coin: "" });
   const { isConnected } = useAccount();
@@ -27,37 +29,45 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [showAllRoutes, setShowAllRoutes] = useState(false);
   const [isSwap, setIsSwap] = useState(false);
   const [callTxn, setCallTxn] = useState(false);
-  const [routesData,setRoutesData]=useState([])
+  const [routesData, setRoutesData] = useState([]);
   const [txnBodyData, setTxnBodyData] = useState();
   const publicClient = usePublicClient();
   const prepare = usePrepareSendTransaction({
     to: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
     value: 10,
   });
-  console.log(prepare.error, "prepare");
   const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
     value: 10,
     ...txnBodyData?.data?.[1]?.txnEvm,
     gasPrice: txnBodyData?.gasPrice,
     gasLimit: txnBodyData?.gasLimit,
   });
-  // const {
-  //   data: data1,
-  //   isLoading: isLoading1,
-  //   isSuccess: isSuccess1,
-  //   sendTransaction: sendTransaction1,
-  // } = useSendTransaction({
-  //   value: 0,
-  //   ...txnBodyData?.data?.[1]?.txnEvm,
-  //   gasPrice: txnBodyData?.gasPrice,
-  //   gasLimit: txnBodyData?.gasLimit,
-  // });
-
-  useEffect(()=>{
-    fetch('https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=0xdAC17F958D2ee523a2206206994597C13D831ec7&vs_currencies=usd').then(res=>res.json()).then(res=>res)
-  },[])
+  const convertVal = useQuery(
+    ["convert", fromCoin, toCoin],
+    async () => {
+      let res = await controllers.convertVal(
+        fromCoin.priceId,
+        toCoin.priceId,
+        toCoin.coinKey
+      );
+      return await res.json();
+    },
+    {
+      onSuccess: (data) => {
+        console.log(data, "conertdata");
+      },
+    }
+  );
   const routes = useQuery(
-    ["routes", selectedWallet?.address, fromChain, toChain, fromCoin, toCoin],
+    [
+      "routes",
+      selectedWallet?.address,
+      fromChain,
+      toChain,
+      fromCoin,
+      toCoin,
+      amount,
+    ],
     async () => {
       let res = await controllers.fetchRoutes(
         selectedWallet?.address,
@@ -106,21 +116,6 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
         });
         setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
         sendTransaction();
-        // let gasLimit1 = await publicClient.estimateGas({
-        //   account: selectedWallet?.address,
-        //   ...data?.result?.[1]?.txnEvm,
-        // });
-        // let gasPrice1 = await publicClient.getGasPrice({
-        //   account: selectedWallet?.address,
-        //   ...data?.result?.[1]?.txnEvm,
-        // });
-        // console.log(gasPrice1, gasLimit1, txnBodyData, "pric1");
-        // setTxnBodyData({
-        //   data: data?.result,
-        //   gasPrice: gasPrice1,
-        //   gasLimit: gasLimit1,
-        // });
-        // sendTransaction1();
         setCallTxn(false);
       },
       onError: () => {
@@ -128,7 +123,6 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       },
     }
   );
-  console.log(txnBodyData, "body");
   function handleResetList() {
     setShowExchangeList();
   }
@@ -166,8 +160,8 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     setCallTxn(true);
   }
   console.log(routes, "routes");
-  function handleRoutesData(data){
-    setRoutesData(data)
+  function handleRoutesData(data) {
+    setRoutesData(data);
   }
   return (
     <div className="relative">
@@ -199,7 +193,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                 <p className="text-sm font-medium text-text-primary mb-2">
                   From
                 </p>
-                <div>
+                <div className="flex justify-between items-center">
                   <div className="flex items-center gap-x-3">
                     {fromCoin.logoURI && fromChain.image ? (
                       <div className="w-[36px] h-[36px] rounded-[50%]  relative">
@@ -246,16 +240,47 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                       </div>
                     )}
                   </div>
-                  <div className="w-full flex justify-end">
+                  <div className="flex flex-col items-end">
                     <input
+                      autoFocus
                       type="number"
                       value={amount}
                       onChange={(e) => {
                         setAmount(e.target.value);
                       }}
-                      placeholder="~ $0.0"
-                      className="text-sm w-[60px] font-normal text-text-primary bg-transparent"
+                      placeholder="0.0"
+                      className="text-3xl ml-auto mb-1 pl-1 w-[70px] max-w-[120px] font-normal text-text-[#5C5C5C] bg-transparent"
                     />
+                    <div className="flex items-center gap-x-1">
+                      <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">
+                        <p className="leading-[0px] p-0">~</p>
+                        <p className="leading-[0px] p-0">-</p>
+                      </div>
+                      <p className="text-sm font-normal text-text-primary">
+                        $
+                        {amount * convertVal.data?.[fromCoin?.priceId]?.usd ||
+                          0.0}
+                      </p>
+                    </div>
+                    <div>
+                      {fromCoin.coin.length ? (
+                        <div className="flex items-center gap-x-1">
+                          <p className="text-sm font-medium text-text-form">
+                            {fromCoin?.availBal || 0} {fromCoin?.coinKey || ""}
+                          </p>
+                          <button
+                            className="text-[10px] font-normal px-1 border border-text-primary text-text-form"
+                            onClick={() => {
+                              setAmount(truncate(fromCoin?.availBal, 4));
+                            }}
+                          >
+                            Max
+                          </button>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -285,7 +310,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                 <p className="text-sm  font-medium text-text-primary mb-2">
                   To
                 </p>
-                <div>
+                <div className="flex justify-between items-center">
                   <div className="flex items-center gap-x-3">
                     {toCoin.logoURI && toChain.image ? (
                       <div className="w-[36px] h-[36px] rounded-[50%]  relative">
@@ -332,6 +357,30 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                       </div>
                     )}
                   </div>
+                  <div className="flex w-[60%] flex-col items-end">
+                    <input
+                      disabled
+                      autoFocus
+                      value={routesData?.minOutputAmount || 0}
+                      onChange={(e) => {
+                        setToAmount(e.target.value);
+                      }}
+                      placeholder="0.0"
+                      className="text-3xl text-right  w-full ml-auto mb-1 pl-1  font-normal text-text-[#5C5C5C] bg-transparent"
+                    />
+                    <div className="flex items-center gap-x-1">
+                      <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">
+                        <p className="leading-[0px] p-0">~</p>
+                        <p className="leading-[0px] p-0">-</p>
+                      </div>
+                      <p className="text-sm font-normal text-text-primary">
+                        $
+                        {routesData?.minOutputAmount ||
+                          0 * convertVal.data?.[toCoin?.priceId]?.usd ||
+                          0.0}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -341,6 +390,11 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                 handleShowAllRoutes={handleShowAllRoutes}
                 fromChain={fromChain}
                 routesData={routesData}
+                price={
+                  routesData?.minOutputAmount ||
+                  0 * convertVal.data?.[toCoin?.priceId]?.usd ||
+                  0
+                }
               />
             </div>
             <button
@@ -375,6 +429,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           fromChain={fromChain}
           handleShowAllRoutes={handleShowAllRoutes}
           handleRoutesData={handleRoutesData}
+          convertVal={convertVal.data?.[toCoin?.priceId]?.usd || 0}
         />
       )}
     </div>
