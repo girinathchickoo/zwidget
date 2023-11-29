@@ -32,15 +32,32 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [txnBodyData, setTxnBodyData] = useState();
   const publicClient = usePublicClient();
   const prepare = usePrepareSendTransaction({
-    to: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-    value: 10,
+    to: toCoin.address,
+    value: 0,
   });
+  console.log(prepare.data, "prepare");
   const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
-    value: 10,
-    ...txnBodyData?.data?.[1]?.txnEvm,
+    value: 0,
+
     gasPrice: txnBodyData?.gasPrice,
     gasLimit: txnBodyData?.gasLimit,
+    ...prepare.data,
+    ...txnBodyData?.data?.[0]?.txnEvm,
   });
+  const {
+    data: data1,
+    isLoading: isLoading1,
+    isSuccess: isSuccess1,
+    sendTransaction: sendTransaction1,
+  } = useSendTransaction({
+    value: 0,
+
+    gasPrice: txnBodyData?.gasPrice,
+    gasLimit: txnBodyData?.gasLimit,
+    ...prepare.data,
+    ...txnBodyData?.data?.[1]?.txnEvm,
+  });
+
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
     async () => {
@@ -93,7 +110,16 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     }
   );
   const txnBody = useQuery(
-    ["txnbody", fromChain, toChain, fromCoin, toCoin, amount, routesData,selectedWallet?.address],
+    [
+      "txnbody",
+      fromChain,
+      toChain,
+      fromCoin,
+      toCoin,
+      amount,
+      routesData,
+      selectedWallet?.address,
+    ],
     async () => {
       console.log("called");
       let res = await controllers.fetchTxnBody(
@@ -115,6 +141,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
         });
         setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
         sendTransaction();
+        sendTransaction1()
         setCallTxn(false);
       },
       onError: () => {
@@ -242,6 +269,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                   <div className="flex flex-col items-end">
                     <input
                       autoFocus
+                      onWheel={(e) => e.target.blur()}
                       type="number"
                       value={amount}
                       onChange={(e) => {
