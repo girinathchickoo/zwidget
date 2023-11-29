@@ -25,7 +25,7 @@ export default function SelectChain({
       let res = await controllers.fetchChain();
       return await res.json();
     },
-    {
+    {enabled:chainData?.chain?.length?false:true,
       onSuccess: (datas) => {
         let obj = {};
         datas.forEach((item) => {
@@ -88,6 +88,8 @@ export default function SelectChain({
               if (!coinData.coin.length || !chainData.chain.length) {
                 setCoinData({ coin: "" });
                 setChainData({ chain: "" });
+              }else{
+
               }
             }}
             className="absolute left-0 top-[25%]"

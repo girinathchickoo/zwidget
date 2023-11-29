@@ -11,7 +11,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
   }
   return connectors.map((item, i) => {
     return (
-      <>
+      <div>
         <button
           onClick={() => {
             handleConnect(item);
@@ -21,7 +21,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
         >
           {item.name}
         </button>
-      </>
+      </div>
     );
   });
 }

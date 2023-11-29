@@ -2,8 +2,11 @@
   "name": "zwidget",
   "version": "0.1.0",
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@metamask/detect-provider": "^2.0.0",
     "@metamask/sdk": "^0.7.1",
+    "@mui/material": "^5.14.18",
     "@rainbow-me/rainbowkit": "^1.2.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
