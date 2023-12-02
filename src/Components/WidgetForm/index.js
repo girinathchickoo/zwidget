@@ -35,32 +35,9 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const publicClient = usePublicClient();
   const [confirmRoute, setConfirmRoute] = useState(false);
   const [mode, setMode] = useState("Classic");
-  const prepare = usePrepareSendTransaction({
-    to: toCoin.address,
-    value: 0,
-  });
-  console.log(prepare.data, "prepare");
-  const { data, isLoading, isSuccess, sendTransaction } = useSendTransaction({
-    value: 0,
+  const [stopRoute,setStopRoute]=useState(true)
+ 
 
-    gasPrice: txnBodyData?.gasPrice,
-    gasLimit: txnBodyData?.gasLimit,
-    ...prepare.data,
-    ...txnBodyData?.data?.[0]?.txnEvm,
-  });
-  const {
-    data: data1,
-    isLoading: isLoading1,
-    isSuccess: isSuccess1,
-    sendTransaction: sendTransaction1,
-  } = useSendTransaction({
-    value: 0,
-
-    gasPrice: txnBodyData?.gasPrice,
-    gasLimit: txnBodyData?.gasLimit,
-    ...prepare.data,
-    ...txnBodyData?.data?.[1]?.txnEvm,
-  });
 
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
@@ -103,59 +80,23 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       retryOnMount:false,
+      refetchInterval:60000,
       enabled:
         amount &&
         fromChain.chain.length &&
         fromCoin.coin.length &&
         toChain.chain.length &&
-        toCoin.coin.length
+        toCoin.coin.length&& stopRoute
           ? true
           : false,
       onSuccess: (data) => {
-        setRoutesData(data.routes?.[0]?.[0] || [], "routesd");
+        setRoutesData(data.quotes?.[0]?.[0] || [], "routesd");
       },
     }
   );
-  const txnBody = useQuery(
-    [
-      "txnbody",
-      fromChain,
-      toChain,
-      fromCoin,
-      toCoin,
-      amount,
-      routesData,
-      selectedWallet?.address,
-    ],
-    async () => {
-      console.log("called");
-      let res = await controllers.fetchTxnBody(
-        `/createTx?fromChainId=${fromChain?.chainId}&toChainId=${toChain?.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${amount}&userWalletAddress=${selectedWallet?.address}&routeId=${routesData.routeId}`
-      );
-      return await res.json();
-    },
-
-    {
-      enabled: callTxn,
-      onSuccess: async (data) => {
-        let gasLimit = await publicClient.estimateGas({
-          account: selectedWallet?.address,
-          ...data?.result?.[0]?.txnEvm,
-        });
-        let gasPrice = await publicClient.getGasPrice({
-          account: selectedWallet?.address,
-          ...data?.result?.[0]?.txnEvm,
-        });
-        setTxnBodyData({ data: data?.result, gasPrice, gasLimit });
-        sendTransaction();
-        sendTransaction1();
-        setCallTxn(false);
-      },
-      onError: () => {
-        setCallTxn(false);
-      },
-    }
-  );
+  function handleStopRoute(){
+    setStopRoute(false)
+  }
   function handleResetList() {
     setShowExchangeList();
   }
@@ -515,6 +456,8 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           mode={mode}
           handleMode={handleMode}
           convertVal={convertVal}
+          routes={routes}
+          handleStopRoute={handleStopRoute}
         />
       )}
     </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SelectWallet from "../SelectWallet";
 import useStore from "../../zustand/store";
 import { isEmpty } from "lodash";
@@ -31,6 +31,7 @@ export default function WidgetContainer() {
   function handleSetWallet(wallet) {
     setSelectedWallet(wallet);
   }
+
   let walletData = {
     address,
     chain,
@@ -60,7 +61,6 @@ export default function WidgetContainer() {
                   id="basic-button"
                   style={{ fontSize: "12px" }}
                   className="gap-x-2"
-                  
                 >
                   <p className="text-text-primary">{address}</p>
                   <img src="/down.svg" />
@@ -78,7 +78,7 @@ export default function WidgetContainer() {
                     chain:{chain.network}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    Balance:{truncate(data?.formatted,4)}
+                    Balance:{truncate(data?.formatted, 4)}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <button

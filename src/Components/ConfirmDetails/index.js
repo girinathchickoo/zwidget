@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RoundedButton from "../Button/RoundedButton";
 import TokenContainer from "./TokenContainer";
 import styles from "./ConfirmDetails.module.css";
+import Exchange from "../Exchange";
 export default function ConfirmDetails({
   handleConfirmClose,
   routesData,
@@ -13,11 +14,31 @@ export default function ConfirmDetails({
   mode,
   handleMode,
   convertVal,
+  routes,
+  handleStopRoute
 }) {
-  console.log(fromChain, routesData);
   const [isEditable, setIsEditable] = useState(false);
+  const [isOpenExchange, setIsOpenExchange] = useState(false);
   const [slippage, setSlippage] = useState("3.5");
-  return (
+  const [timer, setTimer] = useState(60);
+//   useEffect(() => {
+//     let interval = setInterval(() => {
+//       setTimer((prev) => {
+//         if (prev == 0) {
+//           return 60;
+//         } else {
+//           return prev - 1;
+//         }
+//       });
+//     }, 1000);
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [routes.isFetching]);
+  function handleOpenExchange() {
+    setIsOpenExchange(!isOpenExchange);
+  }
+  return !isOpenExchange ? (
     <div>
       <div className="flex relative justify-center mb-2">
         <button
@@ -33,36 +54,40 @@ export default function ConfirmDetails({
       <div className="w-full text-center">
         <p className="text-lg font-medium text-text-primary">
           {`Quote Expires in `}
-          <span>{"10s"}</span>
+          <span>{`${timer}s`}</span>
         </p>
-        <div className="flex justify-between items-center">
-          <TokenContainer
-            type="Send:"
-            chainData={fromChain}
-            coinData={fromCoin}
-            amount={amount}
-            convertVal={convertVal}
-          />
-          <RoundedButton
-            classnames={`border w-[30px] h-[30px] relative z-10    border-border-secondary bg-background-graybutton`}
-          >
-            <img
-              className="rotate-[-90deg] mt-[-2px] flex items-center justify-center"
-              src="/reverse.svg"
-              width={12}
-              height={12}
-              alt="img"
+        {!routes.isFetching ? (
+          <div className="flex justify-between items-center">
+            <TokenContainer
+              type="Send:"
+              chainData={fromChain}
+              coinData={fromCoin}
+              amount={amount}
+              convertVal={convertVal}
             />
-          </RoundedButton>
-          <div className="w-[20%] right-[40%] absolute h-[1px] bg-border-secondary "></div>
-          <TokenContainer
-            type="Receive:"
-            chainData={toChain}
-            coinData={toCoin}
-            amount={routesData?.minOutputAmount}
-            convertVal={convertVal}
-          />
-        </div>
+            <RoundedButton
+              classnames={`border w-[30px] h-[30px] relative z-10    border-border-secondary bg-background-graybutton`}
+            >
+              <img
+                className="rotate-[-90deg] mt-[-2px] flex items-center justify-center"
+                src="/reverse.svg"
+                width={12}
+                height={12}
+                alt="img"
+              />
+            </RoundedButton>
+            <div className="w-[20%] right-[40%] absolute h-[1px] bg-border-secondary "></div>
+            <TokenContainer
+              type="Receive:"
+              chainData={toChain}
+              coinData={toCoin}
+              amount={routesData?.minOutputAmount}
+              convertVal={convertVal}
+            />
+          </div>
+        ) : (
+          <>Loading</>
+        )}
         <div>
           <p className="text-sm font-normal my-1 text-text-primary">
             On{" "}
@@ -204,6 +229,10 @@ export default function ConfirmDetails({
           </div>
         </div>
         <button
+          onClick={() => {
+            handleOpenExchange();
+            handleStopRoute()
+          }}
           disabled={isEditable}
           className={`w-full disabled:opacity-60 h-[52px] mt-6 ${styles.gradientbutton} text-2xl font-bold text-text-button`}
         >
@@ -211,5 +240,12 @@ export default function ConfirmDetails({
         </button>
       </div>
     </div>
+  ) : (
+    <Exchange handleOpenExchange={handleOpenExchange} fromChain={fromChain}
+    fromCoin={fromCoin}
+    toChain={toChain}
+    toCoin={toCoin}
+    amount={amount}
+    route={routesData} />
   );
 }

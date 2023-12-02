@@ -9,7 +9,7 @@ const controllers = {
   },
   async fetchRoutes(recipient, fromChain, toChain, fromCoin, toCoin, value) {
     return await fetch(
-      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${toChain.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${value}&outputAmount=50&userWalletAddress=${recipient}`
+      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${toChain.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${value}&outputAmount=50&recipient=${recipient}`
     );
   },
   async fetchTxnBody(params) {
@@ -18,11 +18,21 @@ const controllers = {
   async fetchBalance(address) {
     return await fetch(`${config.BACKEND}/balances?walletAddress=${address}`);
   },
-  async convertVal(from, to,fromKey) {
+  async convertVal(from, to, fromKey) {
     return await fetch(
       `${config.COINGECKO}/api/v3/simple/price?ids=${
         from + "," + to
-      }&vs_currencies=${"usd"+","+fromKey}`
+      }&vs_currencies=${"usd" + "," + fromKey}`
+    );
+  },
+  async fetchNextTx(routeid, stepid) {
+    return await fetch(
+      `${config.BACKEND}/nextTx?routeId=${routeid}&stepId=${stepid}`
+    );
+  },
+  async fetchStatus(routeid, stepid, txnhash) {
+    return await fetch(
+      `${config.BACKEND}/status?routeId=${routeid}&stepId=${stepid}&txnHash=${txnhash}`
     );
   },
 };

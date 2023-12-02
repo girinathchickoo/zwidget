@@ -22,7 +22,7 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
           <img src="/routeicon.svg" width={13} height={9} alt="img" />
         </div>
         <div className="h-[500px] overflow-y-auto">
-          {routes.data?.routes?.[0]?.map((item, i) => {
+          {routes.data?.quotes?.[0]?.map((item, i) => {
             return (
               <div onClick={()=>{handleRoutesData(item) 
                 handleShowAllRoutes()

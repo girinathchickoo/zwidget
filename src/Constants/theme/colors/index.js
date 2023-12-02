@@ -9,6 +9,7 @@ const COLOR_PALLETTE = {
     route: "#4c4c4c",
     mode: "#5C5C5C",
     mode1: "#9B9B9B",
+    steps:"#A1A1A1"
   },
   background: {
     container: "#ffffff",
