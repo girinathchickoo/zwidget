@@ -57,7 +57,7 @@ const Exchange = React.memo(function ({
   const textKey = Object.entries(txnStepText);
   const [txnEvm, setTxnEvm] = useState({});
   const [stepData, setStepData] = useState({});
-  const [allSteps, setAllSteps] = useState([]);
+  const [allSteps, setAllSteps] = useState({ steps:null, currentStep: 0 });
   const [showErrorMsg, setShowErrorMsg] = useState("");
   const [stepTextObj, setStepTextObj] = useState({});
   const [disableButton, setDisableButton] = useState(false);
@@ -71,30 +71,6 @@ const Exchange = React.memo(function ({
       ...prepare,
       ...txnEvm,
     });
-  const nextTx = useMutation(
-    "nexttx",
-    async ({ routeId, id }) => {
-      let res = await controllers.fetchNextTx(routeId, id);
-      return await res.json();
-    },
-    {
-      refetchOnWindowFocus: false,
-      onSuccess: (data) => {
-        console.log(data, "evmdata");
-        setDisableButton(false);
-        setTxnEvm(data.txnEvm);
-      },
-    }
-  );
-  function handleStepText(data, type) {
-    let tempobj = {};
-    textKey.forEach(([key, val]) => {
-      if (data?.stepType?.includes(key)) {
-        tempobj = val[type];
-        setStepTextObj(tempobj);
-      }
-    });
-  }
   const txnBody = useQuery(
     ["txnbody", route?.routeId],
     async () => {
@@ -108,17 +84,51 @@ const Exchange = React.memo(function ({
       refetchOnWindowFocus: false,
       onSuccess: async (data) => {
         console.log(data, "opdata");
-        setAllSteps({ steps: data?.steps, currentStep: 0 });
         const {
           routeId,
           steps: [item],
         } = data;
         handleStepText(item, "pre");
         setStepData(item);
+        setTimeout(() => {
+          callNextTx(data?.steps[0], data?.routeId);
+        }, 0);
       },
       onError: () => {},
     }
   );
+  const nextTx = useMutation(
+    "nexttx",
+    async ({ id, routeId }) => {
+      console.log(routeId, id, "mutate  ");
+      let res = await controllers.fetchNextTx(id, routeId);
+      return await res.json();
+    },
+    {
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        console.log(data, "evmdata");
+        setDisableButton(false);
+        setTxnEvm(data.txnEvm);
+        if (!allSteps.steps) {
+          console.log(txnBody, "createtxn");
+          setAllSteps({ steps: txnBody?.data?.steps, currentStep: 0 });
+        } else {
+          setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
+        }
+      },
+    }
+  );
+  function handleStepText(data, type) {
+    let tempobj = {};
+    textKey.forEach(([key, val]) => {
+      if (data?.stepType?.includes(key)) {
+        tempobj = val[type];
+        setStepTextObj(tempobj);
+      }
+    });
+  }
+
   const fetchStatus = useMutation(
     "status",
     async ({ routeId, stepId, txnHash }) => {
@@ -132,7 +142,11 @@ const Exchange = React.memo(function ({
           clearInterval(interval);
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
           setStepData(allSteps.steps[allSteps.currentStep + 1]);
-          setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
+          console.log(allSteps, "ALL");
+          callNextTx(
+            allSteps.steps[allSteps.currentStep + 1],
+            txnBody.data?.routeId
+          );
         } else {
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
@@ -158,15 +172,18 @@ const Exchange = React.memo(function ({
       console.log("catched", err);
     }
   }
-  async function callNextTx() {
-    nextTx.mutateAsync({ id: stepData?.id, routeId: txnBody.data?.routeId });
-  }
-  useEffect(() => {
-    if (!isEmpty(stepData)) {
-      callNextTx();
+  async function callNextTx(stepval, routeval) {
+    console.log(stepval, "txndata");
+    try {
+      console.log(stepval?.id, "txndata");
+      await nextTx.mutateAsync({
+        id: stepval?.id,
+        routeId: routeval,
+      });
+    } catch (err) {
+      console.log(err);
     }
-  }, [stepData]);
-  console.log(stepData, "stepsData");
+  }
   useEffect(() => {
     if (!isError && data) {
       console.log("call status");
@@ -181,10 +198,20 @@ const Exchange = React.memo(function ({
   async function handleStep() {
     setDisableButton(true);
     sendTransaction();
-    handleStepText(allSteps.steps[allSteps.currentStep], "process");
+    handleStepText(allSteps.steps[allSteps?.currentStep || 0], "process");
   }
   console.log(stepData, "stepData");
-
+  function getStepName(steptype, status) {
+    const stepTextArr = Object.keys(txnStepText);
+    let text = "";
+    stepTextArr.forEach((item) => {
+      if (steptype?.stepType?.includes(item?.toLowerCase())) {
+        console.log(item, "for", txnStepText[item]?.[status]?.title);
+        text = txnStepText[item]?.[status]?.title;
+      }
+    });
+    return text;
+  }
   return (
     <div className="w-full relative h-[550px]">
       <div className="flex relative justify-center mb-2">
@@ -212,37 +239,55 @@ const Exchange = React.memo(function ({
       </div>
       <div className="py-4 mt-4">
         {txnBody.isSuccess && txnBody.data ? (
-          txnBody.data?.steps?.map((item, i, arr) => {
-            return (
-              <div className="flex relative items-center mb-4 w-max justify-center gap-x-3">
-                {allSteps?.currentStep <= i ? (
-                  <div className="w-[18px] rounded-[50%] h-[18px] bg-background-graybutton"></div>
-                ) : (
-                  <img src="/stepstick.svg" width={18} height={18} alt="img" />
-                )}
-                {i !== arr.length - 1 ? (
-                  <div
-                    className={`h-[20px] absolute w-[1px] left-[9%] top-[90%] ${
-                      allSteps?.currentStep <= i
-                        ? "bg-background-graybutton "
-                        : "bg-background-secondary"
-                    }`}
-                  ></div>
-                ) : (
-                  <></>
-                )}
-                <span
-                  className={`text-lg  ${
-                    allSteps?.currentStep == i
-                      ? "text-text-search font-medium"
-                      : "text-text-steps font-normal"
-                  } `}
-                >
-                  {item.stepType}
-                </span>
-              </div>
-            );
-          })
+          txnBody.data?.steps
+            ?.filter((item) => {
+              return item.stepType !== "claim";
+            })
+            .map((item, i, arr) => {
+              console.log(
+                getStepName(item, disableButton ? "process" : "pre"),
+                "get"
+              );
+              return (
+                <div className="flex relative items-center mb-4 w-max justify-center gap-x-3">
+                  {allSteps?.currentStep <= i ? (
+                    <div className="w-[18px] rounded-[50%] h-[18px] bg-background-graybutton"></div>
+                  ) : (
+                    <img
+                      src="/stepstick.svg"
+                      width={18}
+                      height={18}
+                      alt="img"
+                    />
+                  )}
+                  {i !== arr.length - 1 ? (
+                    <div
+                      className={`h-[20px] absolute w-[1px] left-[3%] top-[90%] ${
+                        allSteps?.currentStep <= i
+                          ? "bg-background-graybutton "
+                          : "bg-background-secondary"
+                      }`}
+                    ></div>
+                  ) : (
+                    <></>
+                  )}
+                  <span
+                    className={`text-lg  ${
+                      allSteps?.currentStep == i
+                        ? "text-text-search font-medium"
+                        : "text-text-steps font-normal"
+                    } `}
+                  >
+                    {getStepName(
+                      item,
+                      disableButton && allSteps?.currentStep == i
+                        ? "process"
+                        : "pre"
+                    )}
+                  </span>
+                </div>
+              );
+            })
         ) : (
           <></>
         )}
@@ -280,22 +325,22 @@ const Exchange = React.memo(function ({
               } ${toCoin.coinKey}`}</p>
               <p className="text-sm mb-2 font-normal text-text-primary">{`Received on ${toChain.name} chain`}</p>
               <div className="flex items-center gap-x-1">
-              <p className="text-sm font-normal text-text-primary">{`Tx id: ${
-                data?.hash
-                  ? `${data.hash.substring(0, 5)}...${data.hash.substring(
-                      data.hash.length - 5,
-                      data.hash.length
-                    )}`
-                  : ""
-              }`}</p>
-              <div
-              className="cursor-pointer"
-                onClick={() => {
-                  navigator.clipboard.writeText(data.hash);
-                }}
-              >
-                <img src="/copy.svg" />
-              </div>
+                <p className="text-sm font-normal text-text-primary">{`Tx id: ${
+                  data?.hash
+                    ? `${data.hash.substring(0, 5)}...${data.hash.substring(
+                        data.hash.length - 5,
+                        data.hash.length
+                      )}`
+                    : ""
+                }`}</p>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    navigator.clipboard.writeText(data.hash);
+                  }}
+                >
+                  <img src="/copy.svg" />
+                </div>
               </div>
             </div>
             <div>

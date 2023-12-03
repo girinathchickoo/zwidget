@@ -27,7 +27,7 @@ const controllers = {
   },
   async fetchNextTx(routeid, stepid) {
     return await fetch(
-      `${config.BACKEND}/nextTx?routeId=${routeid}&stepId=${stepid}`
+      `${config.BACKEND}/nextTx?routeId=${stepid}&stepId=${routeid}`
     );
   },
   async fetchStatus(routeid, stepid, txnhash) {
