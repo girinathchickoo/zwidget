@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import RoundedButton from "../Button/RoundedButton";
 import TokenContainer from "./TokenContainer";
 import styles from "./ConfirmDetails.module.css";
 import Exchange from "../Exchange";
+import QuoteTimer from "./QuoteTimer";
 export default function ConfirmDetails({
   handleConfirmClose,
   routesData,
@@ -15,26 +16,18 @@ export default function ConfirmDetails({
   handleMode,
   convertVal,
   routes,
-  handleStopRoute
+  handleStopRoute,
 }) {
   const [isEditable, setIsEditable] = useState(false);
   const [isOpenExchange, setIsOpenExchange] = useState(false);
   const [slippage, setSlippage] = useState("3.5");
-  const [timer, setTimer] = useState(60);
-//   useEffect(() => {
-//     let interval = setInterval(() => {
-//       setTimer((prev) => {
-//         if (prev == 0) {
-//           return 60;
-//         } else {
-//           return prev - 1;
-//         }
-//       });
-//     }, 1000);
-//     return () => {
-//       clearInterval(interval);
-//     };
-//   }, [routes.isFetching]);
+
+  const prevRoute = useRef();
+  console.log(routesData, prevRoute.current, "routesdata");
+
+  useEffect(() => {
+    if (!prevRoute.current && prevRoute?.current?.minOutputAmount !==routesData?.minOutputAmount) prevRoute.current = routesData;
+  }, [routesData]);
   function handleOpenExchange() {
     setIsOpenExchange(!isOpenExchange);
   }
@@ -52,10 +45,7 @@ export default function ConfirmDetails({
         </div>
       </div>
       <div className="w-full text-center">
-        <p className="text-lg font-medium text-text-primary">
-          {`Quote Expires in `}
-          <span>{`${timer}s`}</span>
-        </p>
+        <QuoteTimer />
         {!routes.isFetching ? (
           <div className="flex justify-between items-center">
             <TokenContainer
@@ -228,24 +218,44 @@ export default function ConfirmDetails({
             </p>
           </div>
         </div>
-        <button
-          onClick={() => {
-            handleOpenExchange();
-            handleStopRoute()
-          }}
-          disabled={isEditable}
-          className={`w-full disabled:opacity-60 h-[52px] mt-6 ${styles.gradientbutton} text-2xl font-bold text-text-button`}
-        >
-          Place Order
-        </button>
+        {prevRoute.current &&
+        prevRoute.current?.minOutputAmount !== routesData.minOutputAmount ? (
+          <div className="w-full mt-4 flex ">
+            <div className="w-1/2 text-left">
+              <span className="text-lg font-medium text-text-selected">
+                {routesData?.minOutputAmount + " " + toCoin?.coinKey}
+              </span>
+              <p className="text-sm font-normal text-text-primary">$ 1920.80</p>
+            </div>
+            <button
+              className={`text-lg w-1/2 font-bold text-white ${styles.gradientbutton}`}
+            >
+              Accept New Quote
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => {
+              handleOpenExchange();
+              handleStopRoute();
+            }}
+            disabled={isEditable}
+            className={`w-full disabled:opacity-60 h-[52px] mt-6 ${styles.gradientbutton} text-2xl font-bold text-text-button`}
+          >
+            Place Order
+          </button>
+        )}
       </div>
     </div>
   ) : (
-    <Exchange handleOpenExchange={handleOpenExchange} fromChain={fromChain}
-    fromCoin={fromCoin}
-    toChain={toChain}
-    toCoin={toCoin}
-    amount={amount}
-    route={routesData} />
+    <Exchange
+      handleOpenExchange={handleOpenExchange}
+      fromChain={fromChain}
+      fromCoin={fromCoin}
+      toChain={toChain}
+      toCoin={toCoin}
+      amount={amount}
+      route={routesData}
+    />
   );
 }
