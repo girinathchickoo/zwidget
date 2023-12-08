@@ -113,7 +113,10 @@ export default function LoadRoute({
           </div>
         </>
       ) : (
-        <></>
+        routes.isSuccess &&
+        <div className="bg-background-form text-text-loading flrx justify-center items-center h-[80px] relative flex flex-col  border border-border-primary">
+          No Routes Available
+        </div>
       )}
     </div>
   );

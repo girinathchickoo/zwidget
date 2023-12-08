@@ -17,6 +17,8 @@ import AllRoutes from "./AllRoutes";
 import truncate from "../../utils/truncate";
 import { isEmpty } from "lodash";
 import ConfirmDetails from "../ConfirmDetails";
+import ModeComp from "./ModeComp";
+import Navbar from "../Navbar";
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [amount, setAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
@@ -35,9 +37,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const publicClient = usePublicClient();
   const [confirmRoute, setConfirmRoute] = useState(false);
   const [mode, setMode] = useState("Classic");
-  const [stopRoute,setStopRoute]=useState(true)
- 
-
+  const [stopRoute, setStopRoute] = useState(true);
 
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
@@ -79,14 +79,15 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
-      retryOnMount:false,
-      refetchInterval:60000,
+      retryOnMount: false,
+      refetchInterval: 60000,
       enabled:
         amount &&
         fromChain.chain.length &&
         fromCoin.coin.length &&
         toChain.chain.length &&
-        toCoin.coin.length&& stopRoute
+        toCoin.coin.length &&
+        stopRoute
           ? true
           : false,
       onSuccess: (data) => {
@@ -94,8 +95,8 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       },
     }
   );
-  function handleStopRoute(){
-    setStopRoute(false)
+  function handleStopRoute() {
+    setStopRoute(false);
   }
   function handleResetList() {
     setShowExchangeList();
@@ -135,8 +136,8 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       setConfirmRoute(!confirmRoute);
     }
   }
-  
-function handleSubmit() {
+
+  function handleSubmit() {
     // setCallTxn(true);
     handleConfirmClose();
   }
@@ -149,7 +150,7 @@ function handleSubmit() {
   }
   return (
     <div className="relative">
-      <div className="absolute bottom-[-80px] bg-background-container rounded-[20px] left-[-20px] w-[443px] h-[43px]"></div>
+      <Navbar />
       {!confirmRoute ? (
         !showAllRoutes ? (
           !showExchangeList ? (
@@ -380,23 +381,7 @@ function handleSubmit() {
                   </div>
                 </div>
               </div>
-              <div>
-                <p>Mode</p>
-                <button
-                  onClick={() => {
-                    handleMode("Classic");
-                  }}
-                >
-                  classic
-                </button>
-                <button
-                  onClick={() => {
-                    handleMode("Gasless");
-                  }}
-                >
-                  Gasless
-                </button>
-              </div>
+              <ModeComp handleMode={handleMode} mode={mode} />
               <div>
                 <LoadRoute
                   routes={routes}
