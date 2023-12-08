@@ -2,8 +2,12 @@ import TokenBox from "./TokenBox";
 import React, { useEffect, useState } from "react";
 import { useQuery, useMutation } from "react-query";
 import controllers from "../../Actions/Controllers";
-import { useSendTransaction, usePrepareSendTransaction } from "wagmi";
-import { isEmpty } from "lodash";
+import {
+  useSendTransaction,
+  usePrepareSendTransaction,
+  useSwitchNetwork,
+} from "wagmi";
+import useStore from "../../zustand/store";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./Exchange.module.css";
 let interval;
@@ -63,10 +67,19 @@ const Exchange = React.memo(function ({
   const [showErrorMsg, setShowErrorMsg] = useState("");
   const [stepTextObj, setStepTextObj] = useState({});
   const [disableButton, setDisableButton] = useState(false);
+  const { chains, error, switchNetwork } = useSwitchNetwork();
   const prepare = usePrepareSendTransaction({
     to: toCoin.address,
     value: 0,
   });
+  const walletData = useStore((state) => state.walletData);
+  useEffect(() => {
+    if (fromChain?.id !== walletData?.id) {
+      console.log('called switch',fromChain?.id)
+      switchNetwork(fromChain?.chainId);
+    }
+  }, [walletData,fromChain]);
+  console.log(walletData, fromChain, "Walletdata");
   const { data, isLoading, isError, sendTransaction, reset } =
     useSendTransaction({
       value: 0,
@@ -120,7 +133,6 @@ const Exchange = React.memo(function ({
           setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
-      
       },
     }
   );

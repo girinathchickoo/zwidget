@@ -27,7 +27,9 @@ export default function WidgetContainer() {
   function handleShowWallet(val) {
     setShowWallet(val);
   }
-
+  useEffect(() => {
+    setWalletData(chain);
+  }, [chain]);
   function handleSetWallet(wallet) {
     setSelectedWallet(wallet);
   }
