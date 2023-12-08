@@ -135,7 +135,8 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       setConfirmRoute(!confirmRoute);
     }
   }
-  async function handleSubmit() {
+  
+function handleSubmit() {
     // setCallTxn(true);
     handleConfirmClose();
   }

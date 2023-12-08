@@ -4,6 +4,8 @@ import { useQuery, useMutation } from "react-query";
 import controllers from "../../Actions/Controllers";
 import { useSendTransaction, usePrepareSendTransaction } from "wagmi";
 import { isEmpty } from "lodash";
+import RoundedButton from "../Button/RoundedButton";
+import styles from "./Exchange.module.css";
 let interval;
 const Exchange = React.memo(function ({
   handleOpenExchange,
@@ -57,7 +59,7 @@ const Exchange = React.memo(function ({
   const textKey = Object.entries(txnStepText);
   const [txnEvm, setTxnEvm] = useState({});
   const [stepData, setStepData] = useState({});
-  const [allSteps, setAllSteps] = useState({ steps:null, currentStep: 0 });
+  const [allSteps, setAllSteps] = useState({ steps: null, currentStep: 0 });
   const [showErrorMsg, setShowErrorMsg] = useState("");
   const [stepTextObj, setStepTextObj] = useState({});
   const [disableButton, setDisableButton] = useState(false);
@@ -65,7 +67,7 @@ const Exchange = React.memo(function ({
     to: toCoin.address,
     value: 0,
   });
-  const { data, isLoading, isError, isSuccess, sendTransaction } =
+  const { data, isLoading, isError, sendTransaction, reset } =
     useSendTransaction({
       value: 0,
       ...prepare,
@@ -113,9 +115,12 @@ const Exchange = React.memo(function ({
         if (!allSteps.steps) {
           console.log(txnBody, "createtxn");
           setAllSteps({ steps: txnBody?.data?.steps, currentStep: 0 });
+          handleStepText(txnBody?.data?.steps[0], "pre");
         } else {
           setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
+          handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
+      
       },
     }
   );
@@ -128,7 +133,7 @@ const Exchange = React.memo(function ({
       }
     });
   }
-
+  console.log(isError, "errorr");
   const fetchStatus = useMutation(
     "status",
     async ({ routeId, stepId, txnHash }) => {
@@ -137,10 +142,10 @@ const Exchange = React.memo(function ({
     },
     {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
       onSuccess: (data) => {
         if (data.txnStatus == "success" || data.txnStatus == "failed") {
           clearInterval(interval);
-          handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
           setStepData(allSteps.steps[allSteps.currentStep + 1]);
           console.log(allSteps, "ALL");
           callNextTx(
@@ -185,11 +190,21 @@ const Exchange = React.memo(function ({
     }
   }
   useEffect(() => {
+    if (isError) {
+      console.log("reset done");
+      reset();
+    }
+  }, []);
+
+  useEffect(() => {
     if (!isError && data) {
       console.log("call status");
       interval = setInterval(() => {
         callStatus();
       }, 5000);
+    }
+    if (isError) {
+      setDisableButton(false);
     }
     return () => {
       clearInterval(interval);
@@ -200,7 +215,6 @@ const Exchange = React.memo(function ({
     sendTransaction();
     handleStepText(allSteps.steps[allSteps?.currentStep || 0], "process");
   }
-  console.log(stepData, "stepData");
   function getStepName(steptype, status) {
     const stepTextArr = Object.keys(txnStepText);
     let text = "";
@@ -230,6 +244,23 @@ const Exchange = React.memo(function ({
           coinData={fromCoin}
           chainData={fromChain}
         />
+        {isError ? (
+          <div className="bg-white relative z-10">
+            <img src="/failedimg.svg" width={34} height={34} />
+          </div>
+        ) : (
+          <RoundedButton
+            classnames={`border w-[80px] h-[80px] relative z-10    border-border-primary bg-white`}
+          >
+            <p
+              className={`text-lg font-medium text-transparent ${styles.textGrad} bg-clip-text`}
+            >
+              03.25s
+            </p>
+          </RoundedButton>
+        )}
+
+        <div className="w-[24%] right-[38%] absolute h-[1px] bg-background-graybutton "></div>
         <TokenBox
           type="Receive"
           amount={route?.minOutputAmount || ""}
@@ -250,8 +281,31 @@ const Exchange = React.memo(function ({
               );
               return (
                 <div className="flex relative items-center mb-4 w-max justify-center gap-x-3">
-                  {allSteps?.currentStep <= i ? (
+                  {allSteps?.currentStep < i ? (
                     <div className="w-[18px] rounded-[50%] h-[18px] bg-background-graybutton"></div>
+                  ) : allSteps?.currentStep == i ? (
+                    disableButton ? (
+                      <img
+                        src="/arrowprocess.png"
+                        width={18}
+                        height={18}
+                        alt="img"
+                      />
+                    ) : isError ? (
+                      <img
+                        src="/failedimg.svg"
+                        width={18}
+                        height={18}
+                        alt="img"
+                      />
+                    ) : (
+                      <img
+                        src="/handstep.svg"
+                        width={18}
+                        height={18}
+                        alt="img"
+                      />
+                    )
                   ) : (
                     <img
                       src="/stepstick.svg"
@@ -296,23 +350,44 @@ const Exchange = React.memo(function ({
         fetchStatus.data?.txnStatus == "success" ||
         fetchStatus.data?.txnStatus == "failed") &&
       allSteps.currentStep !== allSteps.steps?.length ? (
-        <div className="absolute border-t pt-3 border-border-primary w-full flex flex-col items-center justify-center bottom-0">
-          <p className="text-lg font-medium mb-1 text-text-selected">
-            {stepTextObj?.title || ""}
-          </p>
-          <p className="text-sm font-medium mb-4 text-text-primarys">
-            {stepTextObj?.description || ""}
-          </p>
-          <button
-            disabled={disableButton}
-            className="border text-lg disabled:opacity-60 font-medium   h-[50px] w-[90%] bg-background-form  border-border-primary"
-            onClick={handleStep}
-          >
-            <p className="bg-gradient-to-l from-[#2CFFE4] text-transparent to-[#A45EFF] bg-clip-text">
-              {stepTextObj?.buttonText || stepData?.stepType || ""}
+        isError ? (
+          <div className="absolute border-t pt-3 w-full bottom-0 flex flex-col justify-center items-center">
+            <p className="text-lg font-medium text-text-selected mb-2 text-center">
+              {" "}
+              {getStepName(stepData, "pre")} transaction failed
             </p>
-          </button>
-        </div>
+            <button
+              disabled={disableButton}
+              className="border text-lg flex justify-center items-center gap-x-2 disabled:opacity-60 font-medium   h-[50px] w-[90%] bg-background-form  border-border-primary"
+              onClick={handleOpenExchange}
+            >
+              <p className="bg-gradient-to-l from-[#2CFFE4] text-transparent to-[#A45EFF] bg-clip-text">
+                Go Back
+              </p>
+            </button>
+          </div>
+        ) : (
+          <div className="absolute border-t pt-3 border-border-primary w-full flex flex-col items-center justify-center bottom-0">
+            <p className="text-lg font-medium mb-1 text-text-selected">
+              {stepTextObj?.title || ""}
+            </p>
+            <p className="text-sm text-center font-medium mb-4 text-text-primarys">
+              {stepTextObj?.description || ""}
+            </p>
+            <button
+              disabled={disableButton}
+              className="border text-lg flex justify-center items-center gap-x-2 disabled:opacity-60 font-medium   h-[50px] w-[90%] bg-background-form  border-border-primary"
+              onClick={handleStep}
+            >
+              {disableButton && (
+                <img src="/arrowprocess.png" width={18} height={18} alt="img" />
+              )}
+              <p className="bg-gradient-to-l from-[#2CFFE4] text-transparent to-[#A45EFF] bg-clip-text">
+                {stepTextObj?.buttonText || stepData?.stepType || ""}
+              </p>
+            </button>
+          </div>
+        )
       ) : txnBody?.isSuccess ? (
         <div className="absolute border-t pt-3 border-border-primary w-full flex flex-col items-center justify-center bottom-0">
           <div className="flex items-center w-full justify-between bg-[#FFFFFF] border border-border-primary shadow-md p-2">

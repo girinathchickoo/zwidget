@@ -1,0 +1,4 @@
+.textGrad {
+  background: linear-gradient(to right, #26e288 10%, #3beffa 50%);
+  background-clip: text !important;
+}
