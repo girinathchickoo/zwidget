@@ -10,11 +10,11 @@ export default function LoadRoute({
   routesData,
   price,
 }) {
+  console.log(routes,"routes")
   const {
-    data: {
-      quotes: [quotes],
-    },
+    data,
   } = routes;
+ 
   return (
     <div className="mt-4">
       {routes.isFetching ? (
@@ -66,7 +66,7 @@ export default function LoadRoute({
                 provider={routesData?.provider}
               />
             </div>
-            {quotes?.[0]?.minOutputAmount == routesData.minOutputAmount ? (
+            {data?.quotes?.[0]?.[0].minOutputAmount == routesData.minOutputAmount ? (
               <div className="w-[129px] bg-background-container absolute bottom-[-10%] text-transparent text-sm font-normal  h-[22px] rounded-xl border border-border-green1">
                 <div className=" w-full h-full bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF]  flex justify-center items-center  bg-clip-text  rounded-xl">
                   Recommended

@@ -90,7 +90,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           ? true
           : false,
       onSuccess: (data) => {
-        setRoutesData(data.quotes?.[0]?.[0] || [], "routesd");
+        setRoutesData(data?.quotes?.[0]?.[0] || [], "routesd");
       },
     }
   );
