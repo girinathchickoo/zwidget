@@ -45,10 +45,10 @@ export default function WidgetContainer() {
         width: "443px",
         minHeight: "400px",
         background: "#FFFFFF",
-        margin: "auto",
         borderRadius: "16px",
         padding: "20px",
       }}
+      className="md:w-[443px] md:min-h-[400px] w-full md:m-auto max-w-[98%] mx-auto   md:max-w-[443px]  "
     >
       {!showWallet ? (
         <>

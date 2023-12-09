@@ -381,7 +381,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                   </div>
                 </div>
               </div>
-              <ModeComp handleMode={handleMode} mode={mode} />
+              {/* <ModeComp handleMode={handleMode} mode={mode} /> */}
               <div>
                 <LoadRoute
                   routes={routes}

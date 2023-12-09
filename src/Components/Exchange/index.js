@@ -75,10 +75,10 @@ const Exchange = React.memo(function ({
   const walletData = useStore((state) => state.walletData);
   useEffect(() => {
     if (fromChain?.id !== walletData?.id) {
-      console.log('called switch',fromChain?.id)
+      console.log("called switch", fromChain?.id);
       switchNetwork(fromChain?.chainId);
     }
-  }, [walletData,fromChain]);
+  }, [walletData, fromChain]);
   console.log(walletData, fromChain, "Walletdata");
   const { data, isLoading, isError, sendTransaction, reset } =
     useSendTransaction({
@@ -262,17 +262,17 @@ const Exchange = React.memo(function ({
           </div>
         ) : (
           <RoundedButton
-            classnames={`border w-[80px] h-[80px] relative z-10    border-border-primary bg-white`}
+            classnames={`border w-[65px] h-[65px] md:w-[80px] md:h-[80px] relative z-10    border-border-primary bg-white`}
           >
             <p
-              className={`text-lg font-medium text-transparent ${styles.textGrad} bg-clip-text`}
+              className={` text-sm md:text-lg font-medium text-transparent ${styles.textGrad} bg-clip-text`}
             >
               03.25s
             </p>
           </RoundedButton>
         )}
 
-        <div className="w-[24%] right-[38%] absolute h-[1px] bg-background-graybutton "></div>
+        <div className="w-[39%] z-0 md:w-[24%] right-[35%] md:right-[38%] absolute h-[1px] bg-background-graybutton "></div>
         <TokenBox
           type="Receive"
           amount={route?.minOutputAmount || ""}

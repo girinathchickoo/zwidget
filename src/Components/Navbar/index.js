@@ -1,16 +1,20 @@
 export default function Navbar() {
   return (
-    <div className="absolute bottom-[-80px] flex items-center justify-between px-10 bg-background-container rounded-[20px] left-[-20px] w-[443px] h-[43px]">
+    <div className="absolute bottom-[-80px] flex items-center justify-between px-3 md:px-10 bg-background-container rounded-[20px] md:left-[-20px] w-full md:w-[443px] h-[43px]">
       <button>
         <img src="/tradebridge.svg" />
       </button>
       <button className="flex items-center gap-x-1">
         <img src="/gas.svg" width={16} height={18} alt="img" />
-        <p className="text-sm font-normal  text-text-primary">Gas Station</p>
+        <p className=" text-sm md:text-sm font-normal  text-text-primary">
+          Gas Station
+        </p>
       </button>
       <button className="flex items-center gap-x-1">
         <img src="/history.svg" width={16} height={18} alt="img" />
-        <p className="text-sm font-normal  text-text-primary">History</p>
+        <p className="text-xs md:text-sm font-normal  text-text-primary">
+          History
+        </p>
       </button>
     </div>
   );
