@@ -1,9 +1,6 @@
+const config = {
+  BACKEND: "https://api2.blockend.com",
+  COINGECKO: "https://api.coingecko.com",
+};
 
-
-
-const config={
-    BACKEND:'http://65.2.121.136:3000',
-    COINGECKO:"https://api.coingecko.com"
-}
-
-export default config
+export default config;
