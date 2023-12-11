@@ -76,7 +76,7 @@ const Exchange = React.memo(function ({
   useEffect(() => {
     if (fromChain?.id !== walletData?.id) {
       console.log("called switch", fromChain?.id);
-      switchNetwork(fromChain?.chainId);
+      switchNetwork?.(fromChain?.chainId);
     }
   }, [walletData, fromChain]);
   console.log(walletData, fromChain, "Walletdata");

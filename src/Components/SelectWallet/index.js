@@ -1,5 +1,7 @@
+import { connect } from "@wagmi/core";
 import React, { useState } from "react";
 import { useConnect, useDisconnect } from "wagmi";
+import getIsInstalled from "./getisInstalled";
 export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
   const { connectAsync, data, connectors } = useConnect();
   console.log(data);
@@ -15,7 +17,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
       setErrorMsg(err.details);
     }
   }
-  console.log(connectors, "connectors");
+
   return (
     <div>
       {connectors.map((item, i) => {
@@ -30,9 +32,9 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
               key={i}
               className={`${
                 item.ready ? "" : "opacity-50 pointer-events-none"
-              }`}
+              } flex items-center w-full justify-between`}
             >
-              {item.id == "injected" ? "Browser Wallet" : item.name}
+              <p>{item.name}</p>
             </button>
           </div>
         );

@@ -16,6 +16,7 @@ import { MetaMaskConnector } from "@wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+import { infuraProvider } from "@wagmi/core/providers/infura";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 const queryClient = new QueryClient();
 function ZWidget() {
@@ -23,6 +24,7 @@ function ZWidget() {
     [mainnet, polygonMumbai, polygon, optimism, goerli, sepolia],
     [
       alchemyProvider({ apiKey: "UPTSl0S8hg5frz84jM4q1xc1pJzjHL86" }),
+      infuraProvider({ apiKey: "509ce1bf287447d8b4c5c9f1c034b251" }),
       publicProvider(),
     ]
   );
@@ -33,6 +35,7 @@ function ZWidget() {
     connectors: [
       new InjectedConnector({
         chains,
+        options: { name: "Browser Wallet" },
         shimDisconnect: true,
       }),
       new MetaMaskConnector({ chains, shimDisconnect: true }),
@@ -46,6 +49,7 @@ function ZWidget() {
       }),
     ],
     webSocketPublicClient,
+    publicClient,
   });
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
