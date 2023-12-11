@@ -9,7 +9,8 @@ const COLOR_PALLETTE = {
     route: "#4c4c4c",
     mode: "#5C5C5C",
     mode1: "#9B9B9B",
-    steps:"#A1A1A1"
+    steps: "#A1A1A1",
+    error: "#B22222",
   },
   background: {
     container: "#ffffff",
@@ -18,7 +19,7 @@ const COLOR_PALLETTE = {
     darkgray: "#A1A1A1",
     network: "#F6F6F6",
     secondary: "#808080",
-    mode:"#F4F4F4"
+    mode: "#F4F4F4",
   },
   shadow: {
     button: "#000000",

@@ -12,13 +12,11 @@ import {
 import "./index.css";
 import { alchemyProvider } from "@wagmi/core/providers/alchemy";
 import { WagmiConfig, createConfig } from "wagmi";
-import { MetaMaskConnector } from "@wagmi/core/connectors/metaMask";
+import { MetaMaskConnector } from "@wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "@wagmi/core/connectors/walletConnect";
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "react-query";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 const queryClient = new QueryClient();
 function ZWidget() {
   const { chains, publicClient, webSocketPublicClient } = configureChains(
@@ -33,12 +31,18 @@ function ZWidget() {
     autoConnect: true,
     publicClient,
     connectors: [
-      new MetaMaskConnector(chains),
+      new InjectedConnector({
+        chains,
+        shimDisconnect: true,
+      }),
+      new MetaMaskConnector({ chains, shimDisconnect: true }),
+      new CoinbaseWalletConnector({ chains, shimDisconnect: true }),
       new WalletConnectConnector({
         chains,
         options: {
           projectId: "a3cc5b84df95db911e2f9f9655114425",
         },
+        shimDisconnect: true,
       }),
     ],
     webSocketPublicClient,
