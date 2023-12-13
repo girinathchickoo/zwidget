@@ -240,15 +240,6 @@ const Exchange = React.memo(function ({
   }
   return (
     <div className="w-full relative h-[550px]">
-      <div className="flex relative justify-center mb-2">
-        <button
-          onClick={handleOpenExchange}
-          className="absolute left-0 top-[25%]"
-        >
-          <img src="/close.svg" width={12} height={5} alt="img" />
-        </button>
-        <div className="text-base font-normal text-text-search">Exchange</div>
-      </div>
       <div className="flex justify-between items-center">
         <TokenBox
           type="Send"

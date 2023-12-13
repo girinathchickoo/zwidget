@@ -30,6 +30,7 @@ const COLOR_PALLETTE = {
     green: "#9FC966",
     green1: "#81DCCA",
     mode: "#C2FFF3",
+    wallet: "#CCCCCC",
   },
 };
 

@@ -12,7 +12,7 @@ export default function getIsInstalled(wallet) {
       } else {
         return false;
       }
-    case "coinbase wallet":
+    case "coinbasewallet":
       if (window?.coinbaseWallet) {
         return true;
       } else {
