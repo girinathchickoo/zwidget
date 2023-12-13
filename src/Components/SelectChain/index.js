@@ -284,7 +284,13 @@ export default function SelectChain({
                     <p className="text-sm font-medium text-text-form">
                       {fetchBalance.data?.evm?.[chainData.chainId]?.[
                         item.address.toLowerCase()
-                      ]?.balance / Math.pow(10, 6) || ""}
+                      ]?.balance /
+                        Math.pow(
+                          10,
+                          fetchBalance.data?.evm?.[chainData.chainId]?.[
+                            item.address.toLowerCase()
+                          ]?.decimals || 0
+                        ) || ""}
                     </p>
                   </div>
                 </div>
