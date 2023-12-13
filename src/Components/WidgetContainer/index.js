@@ -10,7 +10,6 @@ import Button from "@mui/material/Button";
 import truncate from "../../utils/truncate";
 export default function WidgetContainer() {
   const [showWallet, setShowWallet] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState("");
   const setWalletData = useStore((state) => state.setWalletData);
   const { address, isConnected } = useAccount();
   const { chain, chains } = useNetwork();
@@ -25,14 +24,11 @@ export default function WidgetContainer() {
   const { data } = useBalance({ address });
   const { disconnect } = useDisconnect();
   function handleShowWallet(val) {
-    setShowWallet(val);
+    setShowWallet(!showWallet);
   }
   useEffect(() => {
     setWalletData(chain);
   }, [chain]);
-  function handleSetWallet(wallet) {
-    setSelectedWallet(wallet);
-  }
 
   let walletData = {
     address,
@@ -106,10 +102,7 @@ export default function WidgetContainer() {
           </div>
         </>
       ) : (
-        <SelectWallet
-          handleShowWallet={handleShowWallet}
-          handleSetWallet={handleSetWallet}
-        />
+        <SelectWallet handleShowWallet={handleShowWallet} />
       )}
     </div>
   );

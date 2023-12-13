@@ -1,24 +1,29 @@
-import { connect } from "@wagmi/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useConnect, useDisconnect } from "wagmi";
 import getIsInstalled from "./getisInstalled";
 import ConnectWalletProgress from "../ConnectWalletProgress";
 export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
-  const { connectAsync, data, connectors } = useConnect();
-  console.log(data);
+  const { connectAsync, data, connectors, isSuccess, isLoading, error } =
+    useConnect();
+
+  const [selectedWallet, setSelectedWallet] = useState("");
+  const [selectedConnector, setSelectedConnector] = useState();
   const [errorMsg, setErrorMsg] = useState("");
-  const { disconnect } = useDisconnect();
   async function handleConnect(connector) {
     try {
       let result = await connectAsync({ connector });
-      handleSetWallet("metamask");
-      handleShowWallet(false);
       setErrorMsg("");
     } catch (err) {
       setErrorMsg(err.details);
     }
   }
-
+  useEffect(() => {
+    data &&
+      isSuccess &&
+      setTimeout(() => {
+        handleShowWallet();
+      }, 1000);
+  }, [isSuccess, data]);
   const walletIcons = {
     injected: "/injectedicon.svg",
     metaMask: "/metamaskicon.svg",
@@ -26,7 +31,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
     walletConnect: "/walletconnecticon.svg",
   };
 
-  return (
+  return !isLoading && !data ? (
     <div>
       <div className="flex relative justify-center mb-2">
         <button
@@ -52,6 +57,8 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
             <div
               key={i}
               onClick={() => {
+                setSelectedWallet(item.id);
+                setSelectedConnector(item);
                 handleConnect(item);
               }}
               style={{ cursor: "pointer" }}
@@ -87,7 +94,30 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
       <p className="text-text-error text-sm font-normal text-center mt-2">
         {errorMsg}
       </p>
-      {/* <ConnectWalletProgress /> */}
+    </div>
+  ) : (
+    <div className="flex flex-col justify-center items-center">
+      <ConnectWalletProgress
+        selectedWallet={selectedWallet}
+        isSuccess={isSuccess}
+        data={data}
+      />
+      <p className="text-lg mt-2 font-medium text-text-mode">
+        Continue in {selectedWallet || ""}
+      </p>
+      <p className="text-lg font-normal mt-2 text-text-form">
+        Accept connection request in the wallet
+      </p>
+      <button
+        onClick={() => {
+          handleConnect(selectedConnector);
+        }}
+        className="w-[100px] flex mt-3 justify-center items-center h-[28px] border rounded-md border-border-primary "
+      >
+        <span className="bg-gradient-to-r  bg-clip-text from-[#2CFFE4] to-[#A45EFF] text-sm font-medium text-transparent">
+          Try Again
+        </span>
+      </button>
     </div>
   );
 }
