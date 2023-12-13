@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import SelectChain from "../SelectChain";
 import useStore from "../../zustand/store";
 import prepareTx from "./prepareTxn";
@@ -31,14 +31,12 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const walletData = useStore((state) => state.walletData);
   const [showAllRoutes, setShowAllRoutes] = useState(false);
   const [isSwap, setIsSwap] = useState(false);
-  const [callTxn, setCallTxn] = useState(false);
   const [routesData, setRoutesData] = useState([]);
-  const [txnBodyData, setTxnBodyData] = useState();
-  const publicClient = usePublicClient();
   const [confirmRoute, setConfirmRoute] = useState(false);
   const [mode, setMode] = useState("Classic");
   const [stopRoute, setStopRoute] = useState(true);
-
+  const [inputWidth, setInputWidth] = useState(50);
+  const inputContainerRef = useRef();
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
     async () => {
@@ -55,6 +53,13 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       },
     }
   );
+  useEffect(() => {
+    setInputWidth(
+      inputContainerRef.current.offsetWidth +
+        (80 / 100) * inputContainerRef.current.offsetWidth || 70
+    );
+  }, [amount]);
+
   const routes = useQuery(
     [
       "routes",
@@ -230,7 +235,13 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         </div>
                       )}
                     </div>
-                    <div className="flex flex-col items-end">
+                    <div className="flex relative flex-col items-end">
+                      <span
+                        className="invisible absolute"
+                        ref={inputContainerRef}
+                      >
+                        {amount}0
+                      </span>
                       <input
                         autoFocus
                         onWheel={(e) => e.target.blur()}
@@ -239,8 +250,9 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         onChange={(e) => {
                           setAmount(e.target.value);
                         }}
+                        style={{ width: inputWidth }}
                         placeholder="0.0"
-                        className="text-3xl ml-auto mb-1 pl-1 w-[70px] max-w-[120px] font-normal text-text-[#5C5C5C] bg-transparent"
+                        className="text-3xl ml-auto mb-1 pl-1 min-w-[70px] max-w-[180px]  font-normal text-text-[#5C5C5C] bg-transparent"
                       />
                       <div className="flex items-center gap-x-1">
                         <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">

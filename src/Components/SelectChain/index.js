@@ -222,7 +222,13 @@ export default function SelectChain({
                       availBal:
                         fetchBalance.data?.evm?.[chainData.chainId]?.[
                           item.address.toLowerCase()
-                        ]?.balance / Math.pow(10, 6),
+                        ]?.balance /
+                        Math.pow(
+                          10,
+                          fetchBalance.data?.evm?.[chainData.chainId]?.[
+                            item.address.toLowerCase()
+                          ]?.decimals || 0
+                        ),
                     };
 
                     setCoinData(newObj);
