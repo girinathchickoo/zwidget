@@ -21,8 +21,8 @@ const controllers = {
   async convertVal(from, to, fromKey) {
     return await fetch(
       `${config.COINGECKO}/api/v3/simple/price?ids=${
-        from + "," + to
-      }&vs_currencies=${"usd" + "," + fromKey}`
+        from || "" + "," + to || ""
+      }&vs_currencies=${"usd" + "," + fromKey || ""}`
     );
   },
   async fetchNextTx(routeid, stepid) {

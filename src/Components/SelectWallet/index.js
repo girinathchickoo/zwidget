@@ -2,6 +2,7 @@ import { connect } from "@wagmi/core";
 import React, { useState } from "react";
 import { useConnect, useDisconnect } from "wagmi";
 import getIsInstalled from "./getisInstalled";
+import ConnectWalletProgress from "../ConnectWalletProgress";
 export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
   const { connectAsync, data, connectors } = useConnect();
   console.log(data);
@@ -86,6 +87,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
       <p className="text-text-error text-sm font-normal text-center mt-2">
         {errorMsg}
       </p>
+      {/* <ConnectWalletProgress /> */}
     </div>
   );
 }

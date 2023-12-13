@@ -45,7 +45,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       let res = await controllers.convertVal(
         fromCoin.priceId,
         toCoin.priceId,
-        toCoin.coinKey
+        toCoin.symbol
       );
       return await res.json();
     },
@@ -257,8 +257,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         {fromCoin.coin.length ? (
                           <div className="flex items-center gap-x-1">
                             <p className="text-sm font-medium text-text-form">
-                              {fromCoin?.availBal || 0}{" "}
-                              {fromCoin?.coinKey || ""}
+                              {fromCoin?.availBal || 0} {fromCoin?.symbol || ""}
                             </p>
                             <button
                               className="text-[10px] font-normal px-1 border border-text-primary text-text-form"

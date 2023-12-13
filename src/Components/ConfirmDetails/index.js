@@ -26,7 +26,11 @@ export default function ConfirmDetails({
   console.log(routesData, prevRoute.current, "routesdata");
 
   useEffect(() => {
-    if (!prevRoute.current && prevRoute?.current?.minOutputAmount !==routesData?.minOutputAmount) prevRoute.current = routesData;
+    if (
+      !prevRoute.current &&
+      prevRoute?.current?.minOutputAmount !== routesData?.minOutputAmount
+    )
+      prevRoute.current = routesData;
   }, [routesData]);
   function handleOpenExchange() {
     setIsOpenExchange(!isOpenExchange);
@@ -223,7 +227,7 @@ export default function ConfirmDetails({
           <div className="w-full mt-4 flex ">
             <div className="w-1/2 text-left">
               <span className="text-lg font-medium text-text-selected">
-                {routesData?.minOutputAmount + " " + toCoin?.coinKey}
+                {routesData?.minOutputAmount + " " + toCoin?.symbol || ""}
               </span>
               <p className="text-sm font-normal text-text-primary">$ 1920.80</p>
             </div>

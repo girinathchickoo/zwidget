@@ -24,13 +24,15 @@ const Exchange = React.memo(function ({
     approval: {
       pre: {
         name: "approval",
-        title: `Approve ${fromCoin?.coinKey} Token Allowance`,
-        description: `Please approve spending cap for ${fromCoin?.coinKey} in your wallet`,
-        buttonText: `Approve ${fromCoin?.coinKey}`,
+        title: `Approve ${fromCoin?.symbol || ""} Token Allowance`,
+        description: `Please approve spending cap for ${
+          fromCoin?.symbol || ""
+        } in your wallet`,
+        buttonText: `Approve ${fromCoin?.symbol || ""}`,
       },
       process: {
         name: "approval",
-        title: `Processing ${fromCoin?.coinKey} Token Allowance`,
+        title: `Processing ${fromCoin?.symbol || ""} Token Allowance`,
         description:
           "We're awaiting token allowance confirmation on the blockchain.",
         buttonText: "Processing",
@@ -400,7 +402,7 @@ const Exchange = React.memo(function ({
               </p>
               <p className="text-2xl font-medium text-text-selected">{`${
                 route?.minOutputAmount || ""
-              } ${toCoin.coinKey}`}</p>
+              } ${toCoin.symbol}`}</p>
               <p className="text-sm mb-2 font-normal text-text-primary">{`Received on ${toChain.name} chain`}</p>
               <div className="flex items-center gap-x-1">
                 <p className="text-sm font-normal text-text-primary">{`Tx id: ${

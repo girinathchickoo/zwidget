@@ -191,7 +191,7 @@ export default function SelectChain({
             ?.filter((item) => {
               return (
                 item.name.toLowerCase().includes(value.toLowerCase()) ||
-                item.coinKey.toLowerCase().includes(value.toLowerCase())
+                item.symbol.toLowerCase().includes(value.toLowerCase())
               );
             })
             .map((item, i) => {
@@ -217,7 +217,7 @@ export default function SelectChain({
                   onClick={async () => {
                     let newObj = {
                       ...coinData,
-                      coin: item.coinKey,
+                      coin: item.symbol,
                       ...item,
                       availBal:
                         fetchBalance.data?.evm?.[chainData.chainId]?.[
@@ -231,6 +231,7 @@ export default function SelectChain({
                       // toCoin.coinKey !== item.coinKey &&
                       toCoin.name !== item.name
                     ) {
+                      console.log("called 1", newObj);
                       handleClosePopup(chainData, newObj);
                       setCoinData(newObj);
                     } else if (
@@ -238,11 +239,13 @@ export default function SelectChain({
                       // fromCoin.coinKey !== item.coinKey &&
                       fromCoin.name !== item.name
                     ) {
+                      console.log("called 2");
                       handleClosePopup(chainData, newObj);
                       setCoinData(newObj);
                     } else if (toChain.name !== fromChain.name) {
                       handleClosePopup(chainData, newObj);
                       setCoinData(newObj);
+                      console.log("called 3");
                     }
                   }}
                   key={i}
@@ -267,7 +270,9 @@ export default function SelectChain({
                     </div>
                     <div>
                       <p className="text-sm font-medium text-text-form">
-                        <span className="font-medium">{item.coinKey} </span>
+                        <span className="font-medium">
+                          {item.symbol || ""}{" "}
+                        </span>
                         {item.name}
                       </p>{" "}
                       <p className="text-xs font-normal  text-text-form">
