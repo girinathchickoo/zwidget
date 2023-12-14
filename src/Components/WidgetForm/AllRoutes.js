@@ -1,6 +1,7 @@
 import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
+import images from "../../images";
 
 export default function AllRoutes({
   fromChain,
@@ -9,6 +10,7 @@ export default function AllRoutes({
   handleRoutesData,
   convertVal,
 }) {
+  const { time, gas, downroute, routeicon, backbutton } = images;
   return (
     <div>
       <div className="flex relative justify-center mb-2">
@@ -18,14 +20,14 @@ export default function AllRoutes({
           }}
           className="absolute left-0 top-[25%]"
         >
-          <img src="/backbutton.svg" width={12} height={5} alt="img" />
+          <img src={backbutton} width={12} height={5} alt="img" />
         </button>
         <div className="text-base font-normal text-text-search">All Routes</div>
       </div>
       <div>
         <div className="w-full flex my-2  text-sm  font-normal text-text-primary justify-start  gap-x-1">
           Routes
-          <img src="/routeicon.svg" width={13} height={9} alt="img" />
+          <img src={routeicon} width={13} height={9} alt="img" />
         </div>
         <div className="h-[500px] overflow-y-auto">
           {routes.data?.quotes?.map((item, i) => {
@@ -48,7 +50,7 @@ export default function AllRoutes({
                     }
                   >
                     <img
-                      src="/downroute.svg"
+                      src={downroute}
                       width={"12"}
                       height={"12"}
                       alt="img"
@@ -107,13 +109,13 @@ export default function AllRoutes({
                     </div>
                     <div className="text-sm w-[60%] flex items-center gap-x-2 font-medium text-text-primary">
                       <div className="flex items-center gap-x-1">
-                        <img src="/gas.svg" width={14} height={14} alt="img" />
+                        <img src={gas} width={14} height={14} alt="img" />
                         <p>$ {truncate(item.fee?.[1]?.amountInUSD, 4) || 0}</p>
                       </div>
                       <Step step={item.steps.length} />
 
                       <div className="flex items-center gap-x-1">
-                        <img src="/time.svg" width={14} height={14} alt="img" />
+                        <img src={time} width={14} height={14} alt="img" />
                         <p>{`${item.estimatedTimeInSeconds || 60}min`}</p>
                       </div>
                     </div>

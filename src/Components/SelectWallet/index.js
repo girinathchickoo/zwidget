@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useConnect, useDisconnect } from "wagmi";
 import getIsInstalled from "./getisInstalled";
 import ConnectWalletProgress from "../ConnectWalletProgress";
+import images from "../../images";
 export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
   const { connectAsync, data, connectors, isSuccess, isLoading, error } =
     useConnect();
@@ -25,12 +26,20 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
       }, 1000);
   }, [isSuccess, data]);
   const walletIcons = {
-    injected: "/injectedicon.svg",
-    metaMask: "/metamaskicon.svg",
-    coinbaseWallet: "/coinbaseicon.svg",
-    walletConnect: "/walletconnecticon.svg",
+    injected: injectedicon,
+    metaMask: metamaskicon,
+    coinbaseWallet: coinbaseicon,
+    walletConnect: walletconnecticon,
   };
-
+  const {
+    metamaskicon,
+    injectedicon,
+    coinbaseicon,
+    walletconnecticon,
+    backbutton,
+    installedicon,
+    close,
+  } = images;
   return !isLoading && !data ? (
     <div>
       <div className="flex relative justify-center mb-2">
@@ -38,7 +47,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
           onClick={handleShowWallet}
           className="absolute left-0 top-[25%]"
         >
-          <img src="/backbutton.svg" width={12} height={5} alt="img" />
+          <img src={backbutton} width={12} height={5} alt="img" />
         </button>
         <div className="text-base font-normal text-text-search">
           Connect Wallet
@@ -47,7 +56,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
           onClick={handleShowWallet}
           className="absolute right-0 top-[25%]"
         >
-          <img src="/close.svg" width={12} height={5} alt="img" />
+          <img src={close} width={12} height={5} alt="img" />
         </button>
       </div>
       <div className="flex justify-center mt-4 flex-wrap gap-4">
@@ -68,12 +77,7 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
             >
               {getIsInstalled(item.id.toLowerCase()) ? (
                 <div className="absolute top-1 left-2">
-                  <img
-                    src="/installedicon.svg"
-                    width={75}
-                    height={14}
-                    alt="img"
-                  />
+                  <img src={installedicon} width={75} height={14} alt="img" />
                 </div>
               ) : (
                 <></>

@@ -1,9 +1,10 @@
 import Icon from "../Icon";
 import React, { useState } from "react";
-
+import images from "../../images";
 export default function ModeComp({ handleMode, mode }) {
   const [isEditable, setIsEditable] = useState(false);
   const [slippage, setSlippage] = useState("");
+  const { info, edit, down, greentick } = images;
   return (
     <div className="mt-4 border-b border-border-mode pb-1 ">
       <p className="text-sm font-medium text-text-form mb-1">Mode</p>
@@ -26,7 +27,7 @@ export default function ModeComp({ handleMode, mode }) {
             }  text-sm font-medium`}
           >
             <div className="absolute right-[-1%] top-[-15%]">
-              <img src="/info.svg" width={14} height={14} alt="img" />
+              <img src={info} width={14} height={14} alt="img" />
             </div>
             <div className="bg-background-mode absolute top-[-17%] px-2 text-xs font-normal text-text-primary">
               <p
@@ -51,7 +52,7 @@ export default function ModeComp({ handleMode, mode }) {
             </div>
             {mode !== "Classic" ? (
               <div className="absolute bottom-1">
-                <img src="/down.svg" width={8} height={4} alt="img" />
+                <img src={down} width={8} height={4} alt="img" />
               </div>
             ) : (
               <div></div>
@@ -106,7 +107,7 @@ export default function ModeComp({ handleMode, mode }) {
             }  text-sm font-medium`}
           >
             <div className="absolute right-[-1%] top-[-15%]">
-              <img src="/info.svg" width={14} height={14} alt="img" />
+              <img src={info} width={14} height={14} alt="img" />
             </div>
             <div className="bg-background-mode absolute top-[-17%] px-2 text-xs font-normal text-text-primary">
               <p
@@ -129,7 +130,7 @@ export default function ModeComp({ handleMode, mode }) {
             </div>
             {mode !== "Gasless" ? (
               <div className="absolute bottom-1">
-                <img src="/down.svg" width={8} height={4} alt="img" />
+                <img src={down} width={8} height={4} alt="img" />
               </div>
             ) : (
               <></>
@@ -171,7 +172,7 @@ export default function ModeComp({ handleMode, mode }) {
               }}
               className="bg-transparent"
             >
-              <img src="/info.svg" width={14} height={14} alt="img" />
+              <img src={info} width={14} height={14} alt="img" />
             </button>
           </div>
           <div className="flex items-center gap-x-2">
@@ -192,7 +193,7 @@ export default function ModeComp({ handleMode, mode }) {
                 }}
                 className="bg-transparent"
               >
-                <img src="/edit.svg" width={12} height={12} alt="img" />
+                <img src={edit} width={12} height={12} alt="img" />
               </button>
             ) : (
               <button
@@ -201,7 +202,7 @@ export default function ModeComp({ handleMode, mode }) {
                 }}
                 className="flex border border-border-secondary rounded-sm py-[3px] p-[2px] justify-center items-center"
               >
-                <img src="/greentick.svg" width={10} height={10} alt="img" />
+                <img src={greentick} width={10} height={10} alt="img" />
               </button>
             )}
           </div>
@@ -210,7 +211,7 @@ export default function ModeComp({ handleMode, mode }) {
           <div className="flex items-center mb-2 gap-x-1">
             <p className="text-sm font-normal  text-text-form">Price Impact</p>
             <button className="bg-transparent">
-              <img src="/info.svg" width={14} height={14} alt="img" />
+              <img src={info} width={14} height={14} alt="img" />
             </button>
           </div>
           <div className="flex items-center gap-x-2">

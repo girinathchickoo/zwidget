@@ -2,7 +2,7 @@ import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 import { isEmpty } from "lodash";
-
+import images from "../../images";
 export default function LoadRoute({
   routes,
   fromChain,
@@ -12,17 +12,17 @@ export default function LoadRoute({
 }) {
   console.log(routes, "routes");
   const { data } = routes;
-
+  const { gas, time, routeicon, downroute, refresh } = images;
   return (
     <div className="mt-4">
       {routes.isFetching ? (
         <>
           <div className="flex items-center gap-x-1">
             <p className="text-sm font-normal text-text-search">Route</p>
-            <img src="/routeicon.svg" width={13} height={9} alt="img" />
+            <img src={routeicon} width={13} height={9} alt="img" />
           </div>
           <div className="border gap-x-1 mt-1 flex h-[80px] justify-center text-lg font-normal text-text-loading items-center border-border-primary">
-            <img src="/refresh.svg" width={14} height={14} alt="img" />
+            <img src={refresh} width={14} height={14} alt="img" />
             Loading Route...
           </div>
         </>
@@ -31,7 +31,7 @@ export default function LoadRoute({
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-x-1">
               <p className="text-sm font-normal text-text-search">Route</p>
-              <img src="/routeicon.svg" width={13} height={9} alt="img" />
+              <img src={routeicon} width={13} height={9} alt="img" />
             </div>
             {routes.data?.quotes?.length - 1 > 0 ? (
               <div
@@ -51,7 +51,7 @@ export default function LoadRoute({
               }
             >
               <img
-                src="/downroute.svg"
+                src={downroute}
                 width={"12"}
                 height={"12"}
                 alt="img"
@@ -107,11 +107,11 @@ export default function LoadRoute({
                 <p>$ {truncate(price, 2)}</p>
               </div>
               <div className="flex items-center gap-x-1">
-                <img src="/gas.svg" width={14} height={14} alt="img" />
+                <img src={gas} width={14} height={14} alt="img" />
                 <p>$ {truncate(routesData?.fee?.[1]?.amountInUSD, 4) || 0}</p>
               </div>
               <div className="flex items-center gap-x-1">
-                <img src="/time.svg" width={14} height={14} alt="img" />
+                <img src={time} width={14} height={14} alt="img" />
                 <p>{`${routesData?.estimatedTimeInSeconds || 60}min`}</p>
               </div>
             </div>

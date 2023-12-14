@@ -1,5 +1,4 @@
 import truncate from "../../../utils/truncate";
-
 export default function TokenContainer({
   type,
   chainData,

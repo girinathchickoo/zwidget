@@ -3,11 +3,6 @@ import SelectChain from "../SelectChain";
 import useStore from "../../zustand/store";
 import prepareTx from "./prepareTxn";
 import { useAccount } from "wagmi";
-import {
-  useSendTransaction,
-  usePublicClient,
-  usePrepareSendTransaction,
-} from "wagmi";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./WidgetForm.module.css";
 import { useQuery } from "react-query";
@@ -17,8 +12,8 @@ import AllRoutes from "./AllRoutes";
 import truncate from "../../utils/truncate";
 import { isEmpty } from "lodash";
 import ConfirmDetails from "../ConfirmDetails";
-import ModeComp from "./ModeComp";
 import Navbar from "../Navbar";
+import images from "../../images";
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [amount, setAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
@@ -53,6 +48,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
       },
     }
   );
+  const { refresh, down, reverse, filter } = images;
   useEffect(() => {
     setInputWidth(
       inputContainerRef.current.offsetWidth +
@@ -167,14 +163,14 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
 
                 <div className="flex items-center gap-x-2">
                   <RoundedButton classnames={"bg-background-graybutton"}>
-                    <img src="/refresh.svg" width="16" height="16" alt="img" />
+                    <img src={refresh} width="16" height="16" alt="img" />
                   </RoundedButton>
                   <RoundedButton
                     classnames={
                       "bg-background-graybutton shadow-sm shadow-shadow-button  "
                     }
                   >
-                    <img src="/filter.svg" width="16" height="16" alt="img" />
+                    <img src={filter} width="16" height="16" alt="img" />
                   </RoundedButton>
                 </div>
               </div>
@@ -211,12 +207,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         >
                           <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
                             <p>Select Token</p>
-                            <img
-                              src="/down.svg"
-                              width={9}
-                              height={4}
-                              alt="img"
-                            />
+                            <img src={down} width={9} height={4} alt="img" />
                           </div>
                         </div>
                       ) : (
@@ -301,7 +292,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                     }
                   >
                     <img
-                      src="/reverse.svg"
+                      src={reverse}
                       className={`${isSwap ? "rotate-180" : ""}`}
                       width={11}
                       height={17}
@@ -341,12 +332,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         >
                           <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
                             <p>Select Token</p>
-                            <img
-                              src="/down.svg"
-                              width={9}
-                              height={4}
-                              alt="img"
-                            />
+                            <img src={down} width={9} height={4} alt="img" />
                           </div>
                         </div>
                       ) : (

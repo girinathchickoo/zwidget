@@ -8,6 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import truncate from "../../utils/truncate";
+import images from "../../images";
 export default function WidgetContainer() {
   const [showWallet, setShowWallet] = useState(false);
   const setWalletData = useStore((state) => state.setWalletData);
@@ -15,6 +16,7 @@ export default function WidgetContainer() {
   const { chain, chains } = useNetwork();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const { down } = images;
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -61,7 +63,7 @@ export default function WidgetContainer() {
                   className="gap-x-2"
                 >
                   <p className="text-text-primary">{address}</p>
-                  <img src="/down.svg" />
+                  <img src={down} />
                 </Button>
                 <Menu
                   anchorEl={anchorEl}

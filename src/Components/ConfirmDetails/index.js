@@ -4,6 +4,7 @@ import TokenContainer from "./TokenContainer";
 import styles from "./ConfirmDetails.module.css";
 import Exchange from "../Exchange";
 import QuoteTimer from "./QuoteTimer";
+import images from "../../images";
 export default function ConfirmDetails({
   handleConfirmClose,
   routesData,
@@ -24,7 +25,7 @@ export default function ConfirmDetails({
 
   const prevRoute = useRef();
   console.log(routesData, prevRoute.current, "routesdata");
-
+  const { info, greentick, edit, gas, reverse, close } = images;
   useEffect(() => {
     if (
       !prevRoute.current &&
@@ -46,7 +47,7 @@ export default function ConfirmDetails({
           onClick={handleConfirmClose}
           className="absolute left-0 top-[25%]"
         >
-          <img src="/close.svg" width={12} height={5} alt="img" />
+          <img src={close} width={12} height={5} alt="img" />
         </button>
         <div className="text-base font-normal text-text-search">
           Confirm Details
@@ -68,7 +69,7 @@ export default function ConfirmDetails({
             >
               <img
                 className="rotate-[-90deg] mt-[-2px] flex items-center justify-center"
-                src="/reverse.svg"
+                src={reverse}
                 width={12}
                 height={12}
                 alt="img"
@@ -108,7 +109,7 @@ export default function ConfirmDetails({
           <p className="text-sm font-medium text-text-form">Mode</p>
           <div className="border flex items-center bg-background-container relative justify-center gap-x-2 w-full h-[43px] border-border-mode">
             <div className="absolute right-[-1%] top-[-10%]">
-              <img src="/info.svg" width={14} height={14} alt="img" />
+              <img src={info} width={14} height={14} alt="img" />
             </div>
             <div className="w-[50%] absolute top-[-20%] flex items-center justify-center text-xs font-normal h-[14px] bg-background-mode">
               <p className="text-transparent bg-gradient-to-l bg-clip-text from-[#2CFFE4] to-[#A45EFF]">
@@ -116,7 +117,7 @@ export default function ConfirmDetails({
               </p>
             </div>
             <div className="flex items-center justify-center gap-x-1">
-              <img src="/gas.svg" width={14} height={15} alt="img" />
+              <img src={gas} width={14} height={15} alt="img" />
               <p className="text-sm font-bold text-text-mode">
                 0.0156 {routesData?.from?.blockchain || ""}
               </p>
@@ -163,7 +164,7 @@ export default function ConfirmDetails({
                 }}
                 className="bg-transparent"
               >
-                <img src="/info.svg" width={14} height={14} alt="img" />
+                <img src={info} width={14} height={14} alt="img" />
               </button>
             </div>
             <div className="flex items-center gap-x-2">
@@ -184,7 +185,7 @@ export default function ConfirmDetails({
                   }}
                   className="bg-transparent"
                 >
-                  <img src="/edit.svg" width={12} height={12} alt="img" />
+                  <img src={edit} width={12} height={12} alt="img" />
                 </button>
               ) : (
                 <button
@@ -193,7 +194,7 @@ export default function ConfirmDetails({
                   }}
                   className="flex border border-border-secondary rounded-sm py-[3px] p-[2px] justify-center items-center"
                 >
-                  <img src="/greentick.svg" width={10} height={10} alt="img" />
+                  <img src={greentick} width={10} height={10} alt="img" />
                 </button>
               )}
             </div>
@@ -204,7 +205,7 @@ export default function ConfirmDetails({
                 Price Impact
               </p>
               <button className="bg-transparent">
-                <img src="/info.svg" width={14} height={14} alt="img" />
+                <img src={info} width={14} height={14} alt="img" />
               </button>
             </div>
             <div className="flex items-center gap-x-2">

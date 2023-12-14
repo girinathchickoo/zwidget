@@ -2,7 +2,7 @@ import { useState } from "react";
 import { connect, getAccount, getNetwork, fetchBalance } from "@wagmi/core";
 import { InjectedConnector } from "@wagmi/core/connectors/injected";
 import useStore from "../../zustand/store";
-import { mainnet, polygon, optimism } from '@wagmi/core/chains'
+import { mainnet, polygon, optimism } from "@wagmi/core/chains";
 export default function BrowserWallet({ handleShowWallet, handleSetWallet }) {
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ export default function BrowserWallet({ handleShowWallet, handleSetWallet }) {
   }
   return (
     <button
-    disabled={isLoading}
+      disabled={isLoading}
       onClick={() => {
         setIsLoading(true);
         handleMetamaskConnect();

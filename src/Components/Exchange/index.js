@@ -10,6 +10,7 @@ import {
 import useStore from "../../zustand/store";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./Exchange.module.css";
+import images from "../../images";
 let interval;
 const Exchange = React.memo(function ({
   handleOpenExchange,
@@ -240,6 +241,9 @@ const Exchange = React.memo(function ({
     });
     return text;
   }
+
+  const { success, stepstick, arrowprocess, copy, handstep, failedimg } =
+    images;
   return (
     <div className="w-full relative h-[550px]">
       <div className="flex justify-between items-center">
@@ -251,7 +255,7 @@ const Exchange = React.memo(function ({
         />
         {isError ? (
           <div className="bg-white relative z-10">
-            <img src="/failedimg.svg" width={34} height={34} />
+            <img src={failedimg} width={34} height={34} />
           </div>
         ) : (
           <RoundedButton
@@ -291,33 +295,18 @@ const Exchange = React.memo(function ({
                   ) : allSteps?.currentStep == i ? (
                     disableButton ? (
                       <img
-                        src="/arrowprocess.png"
+                        src={arrowprocess}
                         width={18}
                         height={18}
                         alt="img"
                       />
                     ) : isError ? (
-                      <img
-                        src="/failedimg.svg"
-                        width={18}
-                        height={18}
-                        alt="img"
-                      />
+                      <img src={failedimg} width={18} height={18} alt="img" />
                     ) : (
-                      <img
-                        src="/handstep.svg"
-                        width={18}
-                        height={18}
-                        alt="img"
-                      />
+                      <img src={handstep} width={18} height={18} alt="img" />
                     )
                   ) : (
-                    <img
-                      src="/stepstick.svg"
-                      width={18}
-                      height={18}
-                      alt="img"
-                    />
+                    <img src={stepstick} width={18} height={18} alt="img" />
                   )}
                   {i !== arr.length - 1 ? (
                     <div
@@ -385,7 +374,7 @@ const Exchange = React.memo(function ({
               onClick={handleStep}
             >
               {disableButton && (
-                <img src="/arrowprocess.png" width={18} height={18} alt="img" />
+                <img src={arrowprocess} width={18} height={18} alt="img" />
               )}
               <p className="bg-gradient-to-l from-[#2CFFE4] text-transparent to-[#A45EFF] bg-clip-text">
                 {stepTextObj?.buttonText || stepData?.stepType || ""}
@@ -419,12 +408,12 @@ const Exchange = React.memo(function ({
                     navigator.clipboard.writeText(data.hash);
                   }}
                 >
-                  <img src="/copy.svg" />
+                  <img src={copy} />
                 </div>
               </div>
             </div>
             <div>
-              <img src="/success.png" width={100} height={100} alt="img" />
+              <img src={success} width={100} height={100} alt="img" />
             </div>
           </div>
         </div>

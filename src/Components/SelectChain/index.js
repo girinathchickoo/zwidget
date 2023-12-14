@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 import controllers from "../../Actions/Controllers";
 import ShowMoreNetworks from "./ShowMoreNetworks";
 import styles from "./Selectchain.module.css";
+import images from "../../images";
 export default function SelectChain({
   setChainData,
   setCoinData,
@@ -71,6 +72,7 @@ export default function SelectChain({
     setChainData(data);
   }
   console.log(fromChain, toChain, "chsin");
+  const { search, close, tick } = images;
   return showMoreNetwork ? (
     <ShowMoreNetworks
       handleSetChainData={handleSetChainData}
@@ -94,7 +96,7 @@ export default function SelectChain({
             }}
             className="absolute left-0 top-[25%]"
           >
-            <img src="/close.svg" width={12} height={5} alt="img" />
+            <img src={close} width={12} height={5} alt="img" />
           </button>
           <div className="text-base font-normal text-text-search">Network</div>
         </div>
@@ -142,7 +144,7 @@ export default function SelectChain({
                       : item.name}
                   </p>
                   {chainData?.chain == item ? (
-                    <img width={10} height={10} src="/tick.png" />
+                    <img width={10} height={10} src={tick} />
                   ) : (
                     <></>
                   )}
@@ -182,7 +184,7 @@ export default function SelectChain({
             className="absolute right-2 bg-background-container top-2"
             width={16}
             height={16}
-            src="/search.svg"
+            src={search}
             alt="img"
           />
         </div>
