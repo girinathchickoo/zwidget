@@ -67,8 +67,10 @@ export default function LoadRoute({
             {Number(
               data?.quotes?.[0]?.minOutputAmount ||
                 data?.quotes?.[0]?.outputAmountDisplay
-            ) == routesData.minOutputAmount ||
-            routesData.outputAmountDisplay ? (
+            ) ==
+            Number(
+              routesData.minOutputAmount || routesData.outputAmountDisplay
+            ) ? (
               <div className="w-[129px] bg-background-container absolute bottom-[-10%] text-transparent text-sm font-normal  h-[22px] rounded-xl border border-border-green1">
                 <div className=" w-full h-full bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF]  flex justify-center items-center  bg-clip-text  rounded-xl">
                   Recommended
