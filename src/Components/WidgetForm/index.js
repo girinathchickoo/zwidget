@@ -406,7 +406,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                   price={
                     Number(
                       routesData?.minOutputAmount ||
-                        routesData.outputAmountDisplay
+                        routesData?.outputAmountDisplay
                     ) * convertVal.data?.[toCoin?.priceId]?.usd || 0
                   }
                 />

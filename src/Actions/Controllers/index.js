@@ -19,10 +19,11 @@ const controllers = {
     return await fetch(`${config.BACKEND}/balances?walletAddress=${address}`);
   },
   async convertVal(from, to, fromKey) {
+    console.log(from, to, fromKey, "controller");
     return await fetch(
       `${config.COINGECKO}/api/v3/simple/price?ids=${
-        from || "" + "," + to || ""
-      }&vs_currencies=${"usd" + "," + fromKey || ""}`
+        (from || "") + "," + (to || "")
+      }&vs_currencies=${"usd" + "," + (fromKey || "")}`
     );
   },
   async fetchNextTx(routeid, stepid) {
