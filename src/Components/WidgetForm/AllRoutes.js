@@ -2,9 +2,15 @@ import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 
-export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handleRoutesData,convertVal }) {
+export default function AllRoutes({
+  fromChain,
+  routes,
+  handleShowAllRoutes,
+  handleRoutesData,
+  convertVal,
+}) {
   return (
-    <div >
+    <div>
       <div className="flex relative justify-center mb-2">
         <button
           onClick={() => {
@@ -22,11 +28,15 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
           <img src="/routeicon.svg" width={13} height={9} alt="img" />
         </div>
         <div className="h-[500px] overflow-y-auto">
-          {routes.data?.quotes?.[0]?.map((item, i) => {
+          {routes.data?.quotes?.map((item, i) => {
             return (
-              <div onClick={()=>{handleRoutesData(item) 
-                handleShowAllRoutes()
-              }} className="mb-4">
+              <div
+                onClick={() => {
+                  handleRoutesData(item);
+                  handleShowAllRoutes();
+                }}
+                className="mb-4"
+              >
                 <div
                   className={`bg-background-form cursor-pointer  flex flex-col items-center px-6 relative  pt-3 pb-6  ${
                     i == 0 ? "border" : "bodrder-0"
@@ -57,7 +67,12 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                   )}
                   <div className="flex w-full  justify-between items-center">
                     <p className="text-lg w-[40%] break-words font-medium text-text-route">
-                    {truncate(item.minOutputAmount,4)}
+                      {truncate(
+                        Number(
+                          item.minOutputAmount || item.outputAmountDisplay
+                        ),
+                        4
+                      )}
                     </p>
                     <div className="flex  w-[60%] items-center gap-x-2">
                       <img
@@ -67,7 +82,10 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                         height={18}
                       />
                       <p className="text-sm font-normal my-1 text-text-primary">
-                      {item?.protocolsUsed.map((item,i,arr)=>{return i==arr.length-1?item:`${item+" & "}`})} via {item?.provider||""}
+                        {item?.protocolsUsed.map((item, i, arr) => {
+                          return i == arr.length - 1 ? item : `${item + " & "}`;
+                        })}{" "}
+                        via {item?.provider || ""}
                       </p>
                     </div>
                   </div>
@@ -77,7 +95,15 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                         <p className="leading-[0px] p-0">~</p>
                         <p className="leading-[0px] p-0">-</p>
                       </div>
-                      <p className="text-text-primary">$ {truncate(item.minOutputAmount*convertVal,2)}</p>
+                      <p className="text-text-primary">
+                        ${" "}
+                        {truncate(
+                          Number(
+                            item.minOutputAmount || item.outputAmountDisplay
+                          ) * convertVal,
+                          2
+                        )}
+                      </p>
                     </div>
                     <div className="text-sm w-[60%] flex items-center gap-x-2 font-medium text-text-primary">
                       <div className="flex items-center gap-x-1">
@@ -85,10 +111,10 @@ export default function AllRoutes({ fromChain, routes, handleShowAllRoutes,handl
                         <p>$ {truncate(item.fee?.[1]?.amountInUSD, 4) || 0}</p>
                       </div>
                       <Step step={item.steps.length} />
-                      
+
                       <div className="flex items-center gap-x-1">
                         <img src="/time.svg" width={14} height={14} alt="img" />
-                        <p>{`${item.deadline}min`}</p>
+                        <p>{`${item.estimatedTimeInSeconds || 60}min`}</p>
                       </div>
                     </div>
                   </div>

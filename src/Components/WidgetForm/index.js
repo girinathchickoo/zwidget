@@ -96,7 +96,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           ? true
           : false,
       onSuccess: (data) => {
-        setRoutesData(data?.quotes?.[0]?.[0] || [], "routesd");
+        setRoutesData(data?.quotes?.[0] || [], "routesd");
       },
     }
   );
@@ -369,7 +369,10 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                       <input
                         disabled
                         autoFocus
-                        value={routesData?.minOutputAmount || 0}
+                        value={
+                          routesData?.minOutputAmount ||
+                          routesData.outputAmountDisplay
+                        }
                         onChange={(e) => {
                           setToAmount(e.target.value);
                         }}
@@ -383,9 +386,10 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         </div>
                         <p className="text-sm font-normal text-text-primary">
                           $
-                          {routesData?.minOutputAmount ||
-                            0 * convertVal.data?.[toCoin?.priceId]?.usd ||
-                            0.0}
+                          {Number(
+                            routesData?.minOutputAmount ||
+                              routesData.outputAmountDisplay
+                          ) * convertVal.data?.[toCoin?.priceId]?.usd || 0.0}
                         </p>
                       </div>
                     </div>
@@ -400,9 +404,10 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                   fromChain={fromChain}
                   routesData={routesData}
                   price={
-                    routesData?.minOutputAmount ||
-                    0 * convertVal.data?.[toCoin?.priceId]?.usd ||
-                    0
+                    Number(
+                      routesData?.minOutputAmount ||
+                        routesData.outputAmountDisplay
+                    ) * convertVal.data?.[toCoin?.priceId]?.usd || 0
                   }
                 />
               </div>

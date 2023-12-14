@@ -268,7 +268,7 @@ const Exchange = React.memo(function ({
         <div className="w-[39%] z-0 md:w-[24%] right-[35%] md:right-[38%] absolute h-[1px] bg-background-graybutton "></div>
         <TokenBox
           type="Receive"
-          amount={route?.minOutputAmount || ""}
+          amount={Number(route?.minOutputAmount || route?.outputAmountDisplay)}
           coinData={toCoin}
           chainData={toChain}
         />
@@ -401,7 +401,7 @@ const Exchange = React.memo(function ({
                 Transaction Successful
               </p>
               <p className="text-2xl font-medium text-text-selected">{`${
-                route?.minOutputAmount || ""
+                route?.minOutputAmount || route.outputAmountDisplay
               } ${toCoin.symbol}`}</p>
               <p className="text-sm mb-2 font-normal text-text-primary">{`Received on ${toChain.name} chain`}</p>
               <div className="flex items-center gap-x-1">

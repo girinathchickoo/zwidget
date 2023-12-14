@@ -1,8 +1,11 @@
+import images from "../../images";
+
 export default function Navbar() {
+  console.log(images);
   return (
     <div className="absolute bottom-[-80px] flex items-center justify-between px-3 md:px-10 bg-background-container rounded-[20px] md:left-[-20px] w-full md:w-[443px] h-[43px]">
       <button>
-        <img src="/tradebridge.svg" />
+        <img src={images.tradebridge} />
       </button>
       <button className="flex items-center gap-x-1">
         <img src="/gas.svg" width={16} height={18} alt="img" />

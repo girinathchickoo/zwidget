@@ -33,12 +33,12 @@ export default function LoadRoute({
               <p className="text-sm font-normal text-text-search">Route</p>
               <img src="/routeicon.svg" width={13} height={9} alt="img" />
             </div>
-            {routes.data?.quotes?.[0]?.length - 1 > 0 ? (
+            {routes.data?.quotes?.length - 1 > 0 ? (
               <div
                 onClick={handleShowAllRoutes}
                 className="text-sm font-normal cursor-pointer hover:opacity-60 bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF] bg-clip-text text-transparent"
               >
-                Show All +{routes.data?.quotes?.[0]?.length - 1} Routes
+                Show All +{routes.data?.quotes?.length - 1} Routes
               </div>
             ) : (
               <></>
@@ -64,8 +64,11 @@ export default function LoadRoute({
                 provider={routesData?.provider}
               />
             </div>
-            {data?.quotes?.[0]?.[0].minOutputAmount ==
-            routesData.minOutputAmount ? (
+            {Number(
+              data?.quotes?.[0]?.minOutputAmount ||
+                data?.quotes?.[0]?.outputAmountDisplay
+            ) == routesData.minOutputAmount ||
+            routesData.outputAmountDisplay ? (
               <div className="w-[129px] bg-background-container absolute bottom-[-10%] text-transparent text-sm font-normal  h-[22px] rounded-xl border border-border-green1">
                 <div className=" w-full h-full bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF]  flex justify-center items-center  bg-clip-text  rounded-xl">
                   Recommended
@@ -75,8 +78,8 @@ export default function LoadRoute({
               <></>
             )}
             <p className="text-3xl font-medium text-text-route">
-              {routesData?.minOutputAmount}{" "}
-              {data?.quotes?.[0]?.[0].to?.symbol || ""}
+              {routesData?.minOutputAmount || routesData.outputAmountDisplay}{" "}
+              {data?.quotes?.[0]?.to?.symbol || ""}
             </p>
             <div className="flex  items-center gap-x-2">
               <img
@@ -107,7 +110,7 @@ export default function LoadRoute({
               </div>
               <div className="flex items-center gap-x-1">
                 <img src="/time.svg" width={14} height={14} alt="img" />
-                <p>{`${routesData?.deadline}min`}</p>
+                <p>{`${routesData?.estimatedTimeInSeconds || 60}min`}</p>
               </div>
             </div>
           </div>

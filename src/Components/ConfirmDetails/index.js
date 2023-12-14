@@ -28,7 +28,11 @@ export default function ConfirmDetails({
   useEffect(() => {
     if (
       !prevRoute.current &&
-      prevRoute?.current?.minOutputAmount !== routesData?.minOutputAmount
+      Number(
+        prevRoute?.current?.minOutputAmount ||
+          prevRoute?.current?.outputAmountDisplay
+      ) !==
+        Number(routesData?.minOutputAmount || routesData?.outputAmountDisplay)
     )
       prevRoute.current = routesData;
   }, [routesData]);
@@ -75,7 +79,9 @@ export default function ConfirmDetails({
               type="Receive:"
               chainData={toChain}
               coinData={toCoin}
-              amount={routesData?.minOutputAmount}
+              amount={Number(
+                routesData?.minOutputAmount || routesData?.outputAmountDisplay
+              )}
               convertVal={convertVal}
             />
           </div>
@@ -223,11 +229,20 @@ export default function ConfirmDetails({
           </div>
         </div>
         {prevRoute.current &&
-        prevRoute.current?.minOutputAmount !== routesData.minOutputAmount ? (
+        Number(
+          prevRoute.current?.minOutputAmount ||
+            prevRoute.current?.outputAmountDisplay
+        ) !==
+          Number(
+            routesData.minOutputAmount || routesData.outputAmountDisplay
+          ) ? (
           <div className="w-full mt-4 flex ">
             <div className="w-1/2 text-left">
               <span className="text-lg font-medium text-text-selected">
-                {routesData?.minOutputAmount + " " + toCoin?.symbol || ""}
+                {(routesData?.minOutputAmount ||
+                  routesData?.outputAmountDisplay) +
+                  " " +
+                  toCoin?.symbol || ""}
               </span>
               <p className="text-sm font-normal text-text-primary">$ 1920.80</p>
             </div>
