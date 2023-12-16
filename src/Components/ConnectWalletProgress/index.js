@@ -6,6 +6,7 @@ import CircularProgress, {
 import { makeStyles } from "@mui/styles";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import images from "../../images";
 const useStyles = makeStyles(() => ({
   circle: {
     stroke: "url(#linearColors)",
@@ -15,11 +16,13 @@ const useStyles = makeStyles(() => ({
 function CircularProgressWithLabel(props) {
   console.log(props, "props");
   const classes = useStyles();
+  const { injectedicon, metamaskicon, walletconnecticon, coinbaseicon } =
+    images;
   const walletIcons = {
-    injected: "/injectedicon.svg",
-    metaMask: "/metamaskicon.svg",
-    coinbaseWallet: "/coinbaseicon.svg",
-    walletConnect: "/walletconnecticon.svg",
+    injected: injectedicon,
+    metaMask: metamaskicon,
+    coinbaseWallet: coinbaseicon,
+    walletConnect: walletconnecticon,
   };
   return (
     <>

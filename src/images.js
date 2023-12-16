@@ -27,7 +27,8 @@ const images = {
   success: require("./Assets/success.png").default,
   tick: require("./Assets/tick.png").default,
   time: require("./Assets/time.svg").default,
-  walletconnection: require("./Assets/walletconnecticon.svg").default,
+  walletconnecticon: require("./Assets/walletconnecticon.svg").default,
+  installedicon: require("./Assets/installedicon.svg").default,
 };
 
 export default images;

@@ -25,12 +25,6 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
         handleShowWallet();
       }, 1000);
   }, [isSuccess, data]);
-  const walletIcons = {
-    injected: injectedicon,
-    metaMask: metamaskicon,
-    coinbaseWallet: coinbaseicon,
-    walletConnect: walletconnecticon,
-  };
   const {
     metamaskicon,
     injectedicon,
@@ -40,6 +34,12 @@ export default function SelectWallet({ handleShowWallet, handleSetWallet }) {
     installedicon,
     close,
   } = images;
+  const walletIcons = {
+    injected: injectedicon,
+    metaMask: metamaskicon,
+    coinbaseWallet: coinbaseicon,
+    walletConnect: walletconnecticon,
+  };
   return !isLoading && !data ? (
     <div>
       <div className="flex relative justify-center mb-2">
