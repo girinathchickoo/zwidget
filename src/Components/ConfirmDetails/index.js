@@ -56,40 +56,39 @@ export default function ConfirmDetails({
       </div>
       <div className="w-full text-center">
         <QuoteTimer quoteTimer={quoteTimer} />
-        {!routes.isFetching ? (
-          <div className="flex justify-between items-center">
-            <TokenContainer
-              type="Send:"
-              chainData={fromChain}
-              coinData={fromCoin}
-              amount={amount}
-              convertVal={convertVal}
+        <div className="flex justify-between items-center">
+          <TokenContainer
+            type="Send:"
+            chainData={fromChain}
+            coinData={fromCoin}
+            amount={amount}
+            convertVal={convertVal}
+            routes={routes}
+          />
+          <RoundedButton
+            classnames={`border w-[30px] h-[30px] relative z-10    border-border-secondary bg-background-graybutton`}
+          >
+            <img
+              className="rotate-[-90deg] mt-[-2px] flex items-center justify-center"
+              src={reverse}
+              width={12}
+              height={12}
+              alt="img"
             />
-            <RoundedButton
-              classnames={`border w-[30px] h-[30px] relative z-10    border-border-secondary bg-background-graybutton`}
-            >
-              <img
-                className="rotate-[-90deg] mt-[-2px] flex items-center justify-center"
-                src={reverse}
-                width={12}
-                height={12}
-                alt="img"
-              />
-            </RoundedButton>
-            <div className="w-[20%] right-[40%] absolute h-[1px] bg-border-secondary "></div>
-            <TokenContainer
-              type="Receive:"
-              chainData={toChain}
-              coinData={toCoin}
-              amount={Number(
-                routesData?.minOutputAmount || routesData?.outputAmountDisplay
-              )}
-              convertVal={convertVal}
-            />
-          </div>
-        ) : (
-          <>Loading</>
-        )}
+          </RoundedButton>
+          <div className="w-[20%] right-[40%] absolute h-[1px] bg-border-secondary "></div>
+          <TokenContainer
+            type="Receive:"
+            chainData={toChain}
+            coinData={toCoin}
+            routes={routes}
+            amount={Number(
+              routesData?.minOutputAmount || routesData?.outputAmountDisplay
+            )}
+            convertVal={convertVal}
+          />
+        </div>
+
         <div>
           <p className="text-sm font-normal my-1 text-text-primary">
             On{" "}
