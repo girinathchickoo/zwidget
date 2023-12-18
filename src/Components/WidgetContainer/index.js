@@ -12,7 +12,9 @@ import images from "../../images";
 export default function WidgetContainer() {
   const [showWallet, setShowWallet] = useState(false);
   const setWalletData = useStore((state) => state.setWalletData);
+  const timerValue = useStore((state) => state.timerValue);
   const { address, isConnected } = useAccount();
+  const [quoteTimer, setQuoteTimer] = useState();
   const { chain, chains } = useNetwork();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -37,6 +39,27 @@ export default function WidgetContainer() {
     chain,
     data,
   };
+  useEffect(() => {
+    setQuoteTimer(timerValue.timer);
+  }, [timerValue]);
+  useEffect(() => {
+    let interval;
+    if (quoteTimer) {
+      interval = setInterval(() => {
+        setQuoteTimer((prev) => {
+          if (prev == 0) {
+            return timerValue?.timer;
+          } else {
+            return prev - 1;
+          }
+        });
+      }, 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [quoteTimer]);
+  console.log(quoteTimer, "quotetimer");
   return (
     <div
       style={{
@@ -100,6 +123,7 @@ export default function WidgetContainer() {
             <WidgetForm
               selectedWallet={walletData}
               handleShowWallet={handleShowWallet}
+              quoteTimer={quoteTimer}
             />
           </div>
         </>

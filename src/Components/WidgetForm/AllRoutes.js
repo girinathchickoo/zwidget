@@ -118,7 +118,9 @@ export default function AllRoutes({
 
                       <div className="flex items-center gap-x-1">
                         <img src={time} width={14} height={14} alt="img" />
-                        <p>{`${item.estimatedTimeInSeconds || 60}min`}</p>
+                        <p>{`${Math.floor(
+                          (item.estimatedTimeInSeconds || 60) / 60
+                        )}min`}</p>
                       </div>
                     </div>
                   </div>

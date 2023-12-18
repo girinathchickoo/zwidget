@@ -139,7 +139,9 @@ export default function LoadRoute({
               </div>
               <div className="flex items-center gap-x-1">
                 <img src={time} width={14} height={14} alt="img" />
-                <p>{`${routesData?.estimatedTimeInSeconds || 60}min`}</p>
+                <p>{`${Math.floor(
+                  (routesData?.estimatedTimeInSeconds || 60) / 60
+                )}min`}</p>
               </div>
             </div>
           </div>

@@ -18,6 +18,7 @@ export default function ConfirmDetails({
   convertVal,
   routes,
   handleStopRoute,
+  quoteTimer,
 }) {
   const [isEditable, setIsEditable] = useState(false);
   const [isOpenExchange, setIsOpenExchange] = useState(false);
@@ -54,7 +55,7 @@ export default function ConfirmDetails({
         </div>
       </div>
       <div className="w-full text-center">
-        <QuoteTimer />
+        <QuoteTimer quoteTimer={quoteTimer} />
         {!routes.isFetching ? (
           <div className="flex justify-between items-center">
             <TokenContainer

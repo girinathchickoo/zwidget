@@ -15,7 +15,11 @@ import ConfirmDetails from "../ConfirmDetails";
 import Navbar from "../Navbar";
 import ModeComp from "./ModeComp";
 import images from "../../images";
-export default function WidgetForm({ selectedWallet, handleShowWallet }) {
+export default function WidgetForm({
+  selectedWallet,
+  handleShowWallet,
+  quoteTimer,
+}) {
   const [amount, setAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [fromChain, setFromChain] = useState({ chain: "" });
@@ -25,6 +29,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [toCoin, setToCoin] = useState({ coin: "" });
   const [showExchangeList, setShowExchangeList] = useState();
   const walletData = useStore((state) => state.walletData);
+  const setTimerValue = useStore((state) => state.setTimerValue);
   const [showAllRoutes, setShowAllRoutes] = useState(false);
   const [isSwap, setIsSwap] = useState(false);
   const [routesData, setRoutesData] = useState([]);
@@ -33,6 +38,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [stopRoute, setStopRoute] = useState(true);
   const [inputWidth, setInputWidth] = useState(50);
   const inputContainerRef = useRef();
+  console.log(setTimerValue, "timervalue");
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
     async () => {
@@ -94,6 +100,11 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           : false,
       onSuccess: (data) => {
         setRoutesData(data?.quotes?.[0] || [], "routesd");
+        setTimerValue({
+          timer:
+            data?.quotes?.[0]?.deadline ||
+            data?.quotes?.[0]?.estimatedTimeInSeconds,
+        });
       },
     }
   );
@@ -456,6 +467,7 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
           convertVal={convertVal}
           routes={routes}
           handleStopRoute={handleStopRoute}
+          quoteTimer={quoteTimer}
         />
       )}
     </div>
