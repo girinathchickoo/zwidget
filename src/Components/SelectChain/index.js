@@ -4,6 +4,7 @@ import controllers from "../../Actions/Controllers";
 import ShowMoreNetworks from "./ShowMoreNetworks";
 import styles from "./Selectchain.module.css";
 import images from "../../images";
+import truncate from "../../utils/truncate";
 export default function SelectChain({
   setChainData,
   setCoinData,
@@ -290,15 +291,18 @@ export default function SelectChain({
                   </div>
                   <div>
                     <p className="text-sm font-medium text-text-form">
-                      {fetchBalance.data?.evm?.[chainData.chainId]?.[
-                        item.address.toLowerCase()
-                      ]?.balance /
-                        Math.pow(
-                          10,
-                          fetchBalance.data?.evm?.[chainData.chainId]?.[
-                            item.address.toLowerCase()
-                          ]?.decimals || 0
-                        ) || ""}
+                      {truncate(
+                        fetchBalance.data?.evm?.[chainData.chainId]?.[
+                          item.address.toLowerCase()
+                        ]?.balance /
+                          Math.pow(
+                            10,
+                            fetchBalance.data?.evm?.[chainData.chainId]?.[
+                              item.address.toLowerCase()
+                            ]?.decimals || 0
+                          ),
+                        6
+                      ) || ""}
                     </p>
                   </div>
                 </div>
