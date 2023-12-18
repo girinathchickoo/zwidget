@@ -1,9 +1,9 @@
 import Icon from "../Icon";
 import React, { useState } from "react";
 import images from "../../images";
-export default function ModeComp({ handleMode, mode }) {
+export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
   const [isEditable, setIsEditable] = useState(false);
-  const [slippage, setSlippage] = useState("");
+
   const { info, edit, down, greentick } = images;
   return (
     <div className="mt-4 border-b border-border-mode pb-1 ">

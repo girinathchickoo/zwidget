@@ -38,6 +38,7 @@ export default function WidgetForm({
   const [stopRoute, setStopRoute] = useState(true);
   const [inputWidth, setInputWidth] = useState(50);
   const inputContainerRef = useRef();
+  const [slippage, setSlippage] = useState("");
   console.log(setTimerValue, "timervalue");
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
@@ -72,6 +73,7 @@ export default function WidgetForm({
       fromCoin,
       toCoin,
       amount,
+      slippage,
     ],
     async () => {
       let res = await controllers.fetchRoutes(
@@ -80,7 +82,8 @@ export default function WidgetForm({
         toChain,
         fromCoin,
         toCoin,
-        amount
+        amount,
+        slippage
       );
       return res.json();
     },
@@ -105,6 +108,7 @@ export default function WidgetForm({
             data?.quotes?.[0]?.deadline ||
             data?.quotes?.[0]?.estimatedTimeInSeconds,
         });
+        setSlippage(data?.quotes?.[0]?.slippage);
       },
     }
   );
@@ -403,7 +407,13 @@ export default function WidgetForm({
                   </div>
                 </div>
               </div>
-              <ModeComp handleMode={handleMode} mode={mode} />
+              <ModeComp
+                handleMode={handleMode}
+                mode={mode}
+                slippage={slippage}
+                setSlippage={setSlippage}
+                routesData={routesData}
+              />
               <div>
                 <LoadRoute
                   routes={routes}

@@ -22,7 +22,7 @@ export default function ConfirmDetails({
 }) {
   const [isEditable, setIsEditable] = useState(false);
   const [isOpenExchange, setIsOpenExchange] = useState(false);
-  const [slippage, setSlippage] = useState("3.5");
+  const [slippage, setSlippage] = useState(routesData?.slippage);
 
   const prevRoute = useRef();
   console.log(routesData, prevRoute.current, "routesdata");
