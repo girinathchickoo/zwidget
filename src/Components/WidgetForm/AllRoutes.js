@@ -110,7 +110,9 @@ export default function AllRoutes({
                     <div className="text-sm w-[60%] flex items-center gap-x-2 font-medium text-text-primary">
                       <div className="flex items-center gap-x-1">
                         <img src={gas} width={14} height={14} alt="img" />
-                        <p>$ {truncate(item.fee?.[1]?.amountInUSD, 4) || 0}</p>
+                        <p>
+                          $ {truncate(item.fee?.[1]?.amountInUSD || 0, 4) || 0}
+                        </p>
                       </div>
                       <Step step={item.steps.length} />
 

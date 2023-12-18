@@ -248,6 +248,10 @@ export default function ConfirmDetails({
               <p className="text-sm font-normal text-text-primary">$ 1920.80</p>
             </div>
             <button
+              onClick={() => {
+                handleOpenExchange();
+                handleStopRoute();
+              }}
               className={`text-lg w-1/2 font-bold text-white ${styles.gradientbutton}`}
             >
               Accept New Quote

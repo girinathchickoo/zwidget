@@ -91,7 +91,12 @@ export default function LoadRoute({
               <></>
             )}
             <p className="text-3xl font-medium text-text-route">
-              {routesData?.minOutputAmount || routesData.outputAmountDisplay}{" "}
+              {truncate(
+                routesData?.minOutputAmount ||
+                  routesData.outputAmountDisplay ||
+                  0,
+                6
+              )}{" "}
               {data?.quotes?.[0]?.to?.symbol || ""}
             </p>
             <div className="flex  items-center gap-x-2">

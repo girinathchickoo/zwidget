@@ -13,6 +13,7 @@ import truncate from "../../utils/truncate";
 import { isEmpty } from "lodash";
 import ConfirmDetails from "../ConfirmDetails";
 import Navbar from "../Navbar";
+import ModeComp from "./ModeComp";
 import images from "../../images";
 export default function WidgetForm({ selectedWallet, handleShowWallet }) {
   const [amount, setAmount] = useState("");
@@ -252,15 +253,19 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         </div>
                         <p className="text-sm font-normal text-text-primary">
                           $
-                          {amount * convertVal.data?.[fromCoin?.priceId]?.usd ||
-                            0.0}
+                          {truncate(
+                            amount *
+                              convertVal.data?.[fromCoin?.priceId]?.usd || 0.0,
+                            6
+                          )}
                         </p>
                       </div>
                       <div>
                         {fromCoin.coin.length ? (
                           <div className="flex items-center gap-x-1">
                             <p className="text-sm font-medium text-text-form">
-                              {fromCoin?.availBal || 0} {fromCoin?.symbol || ""}
+                              {truncate(fromCoin?.availBal || 0, 6)}{" "}
+                              {fromCoin?.symbol || ""}
                             </p>
                             <button
                               className="text-[10px] font-normal px-1 border border-text-primary text-text-form"
@@ -355,10 +360,12 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                       <input
                         disabled
                         autoFocus
-                        value={
+                        value={truncate(
                           routesData?.minOutputAmount ||
-                          routesData.outputAmountDisplay
-                        }
+                            routesData.outputAmountDisplay ||
+                            0,
+                          6
+                        )}
                         onChange={(e) => {
                           setToAmount(e.target.value);
                         }}
@@ -372,17 +379,20 @@ export default function WidgetForm({ selectedWallet, handleShowWallet }) {
                         </div>
                         <p className="text-sm font-normal text-text-primary">
                           $
-                          {Number(
-                            routesData?.minOutputAmount ||
-                              routesData.outputAmountDisplay
-                          ) * convertVal.data?.[toCoin?.priceId]?.usd || 0.0}
+                          {truncate(
+                            Number(
+                              routesData?.minOutputAmount ||
+                                routesData.outputAmountDisplay
+                            ) * convertVal.data?.[toCoin?.priceId]?.usd || 0.0,
+                            6
+                          )}
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {/* <ModeComp handleMode={handleMode} mode={mode} /> */}
+              <ModeComp handleMode={handleMode} mode={mode} />
               <div>
                 <LoadRoute
                   routes={routes}

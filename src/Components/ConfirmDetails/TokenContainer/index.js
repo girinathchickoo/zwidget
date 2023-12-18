@@ -11,7 +11,7 @@ export default function TokenContainer({
     <div className="text-text-primary border border-border-primary w-[40%] py-2 rounded-md flex flex-col items-center justify-center gap-y-2 bg-background-form">
       <p className="text-sm font-normal ">{type}</p>
       <p className=" text-sm md:text-lg leading-5 font-medium">
-        {amount + " " + coinData?.symbol || ""}
+        {truncate(amount, 6) + " " + coinData?.symbol || ""}
       </p>
       <div className="flex leading-5 items-center gap-x-1">
         <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">
