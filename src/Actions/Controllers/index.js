@@ -9,7 +9,7 @@ const controllers = {
   },
   async fetchRoutes(recipient, fromChain, toChain, fromCoin, toCoin, value) {
     return await fetch(
-      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${toChain.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${value}&outputAmount=50&recipient=${recipient}`
+      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${toChain.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${value}&outputAmount=50&userWalletAddress=${recipient}`
     );
   },
   async fetchTxnBody(params) {

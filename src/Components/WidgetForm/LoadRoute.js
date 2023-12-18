@@ -3,6 +3,8 @@ import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 import { isEmpty } from "lodash";
 import images from "../../images";
+import { useEffect, useState } from "react";
+import ethertousd from "../../utils/ethertousd";
 export default function LoadRoute({
   routes,
   fromChain,
@@ -10,9 +12,18 @@ export default function LoadRoute({
   routesData,
   price,
 }) {
-  console.log(routes, "routes");
   const { data } = routes;
+  const [gasData, setGasData] = useState();
   const { gas, time, routeicon, downroute, refresh } = images;
+  useEffect(() => {
+    if (routesData) {
+      routesData?.fee?.forEach((item) => {
+        if (item.type == "network") {
+          setGasData(item);
+        }
+      });
+    }
+  }, [routesData]);
   return (
     <div className="mt-4">
       {routes.isFetching ? (
@@ -108,7 +119,18 @@ export default function LoadRoute({
               </div>
               <div className="flex items-center gap-x-1">
                 <img src={gas} width={14} height={14} alt="img" />
-                <p>$ {truncate(routesData?.fee?.[1]?.amountInUSD, 4) || 0}</p>
+                <p>
+                  ${" "}
+                  {truncate(
+                    gasData?.amountInUSD ||
+                      ethertousd(
+                        gasData?.amountInEther,
+                        gasData?.token?.decimals
+                      ) ||
+                      0,
+                    4
+                  ) || 0}
+                </p>
               </div>
               <div className="flex items-center gap-x-1">
                 <img src={time} width={14} height={14} alt="img" />

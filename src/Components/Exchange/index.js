@@ -127,7 +127,7 @@ const Exchange = React.memo(function ({
       onSuccess: (data) => {
         console.log(data, "evmdata");
         setDisableButton(false);
-        setTxnEvm(data.txnEvm);
+        setTxnEvm(data?.txnData?.txnEvm);
         if (!allSteps.steps) {
           console.log(txnBody, "createtxn");
           setAllSteps({ steps: txnBody?.data?.steps, currentStep: 0 });
@@ -183,7 +183,7 @@ const Exchange = React.memo(function ({
     try {
       await fetchStatus.mutateAsync({
         routeId: txnBody.data.routeId,
-        stepId: stepData?.id,
+        stepId: stepData?.stepId,
         txnHash: data.hash,
       });
       console.log("tried");
@@ -197,7 +197,7 @@ const Exchange = React.memo(function ({
     try {
       console.log(stepval?.id, "txndata");
       await nextTx.mutateAsync({
-        id: stepval?.id,
+        id: stepval?.stepId,
         routeId: routeval,
       });
     } catch (err) {
@@ -242,7 +242,7 @@ const Exchange = React.memo(function ({
     return text;
   }
 
-  const { success, stepstick, arrowprocess, copy, handstep, failedimg } =
+  const { failedimg, arrowprocess, handstep, stepstick, copy, success } =
     images;
   return (
     <div className="w-full relative h-[550px]">
