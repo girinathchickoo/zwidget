@@ -11,6 +11,7 @@ import useStore from "../../zustand/store";
 import RoundedButton from "../Button/RoundedButton";
 import styles from "./Exchange.module.css";
 import images from "../../images";
+import truncate from "../../utils/truncate";
 let interval;
 const Exchange = React.memo(function ({
   handleOpenExchange,
@@ -138,10 +139,7 @@ const Exchange = React.memo(function ({
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
       },
-      onError: () => {
-        setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
-        handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
-      },
+      onError: () => {},
     }
   );
   function handleStepText(data, type) {
@@ -168,10 +166,15 @@ const Exchange = React.memo(function ({
           clearInterval(interval);
           setStepData(allSteps.steps[allSteps.currentStep + 1]);
           console.log(allSteps, "ALL");
-          callNextTx(
-            allSteps.steps[allSteps.currentStep + 1],
-            txnBody.data?.routeId
-          );
+          if (allSteps.currentStep == allSteps?.steps?.length - 1) {
+            setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
+            handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
+          } else {
+            callNextTx(
+              allSteps.steps[allSteps.currentStep + 1],
+              txnBody.data?.routeId
+            );
+          }
         } else {
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
@@ -418,9 +421,10 @@ const Exchange = React.memo(function ({
               <p className="text-lg bg-gradient-to-l from-[#2CFFE4]  to-[#A45EFF] bg-clip-text font-medium text-transparent">
                 Transaction Successful
               </p>
-              <p className="text-2xl font-medium text-text-selected">{`${
-                route?.minOutputAmount || route.outputAmountDisplay
-              } ${toCoin.symbol}`}</p>
+              <p className="text-2xl font-medium text-text-selected">{`${truncate(
+                route?.minOutputAmount || route.outputAmountDisplay || 0,
+                6
+              )} ${toCoin.symbol}`}</p>
               <p className="text-sm mb-2 font-normal text-text-primary">{`Received on ${toChain.name} chain`}</p>
               <div className="flex items-center gap-x-1">
                 <p className="text-sm font-normal text-text-primary">{`Tx id: ${

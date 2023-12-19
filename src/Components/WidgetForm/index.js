@@ -73,7 +73,6 @@ export default function WidgetForm({
       fromCoin,
       toCoin,
       amount,
-      slippage,
     ],
     async () => {
       let res = await controllers.fetchRoutes(
