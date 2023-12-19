@@ -1,6 +1,6 @@
 const images = {
   tradebridge: require("./Assets/tradebridge.svg").default,
-  arrowprocess: require("./Assets/arrowprocess.png").default,
+  arrowprocess: require("./Assets/arrowprocess.png"),
   backbutton: require("./Assets/backbutton.svg").default,
   close: require("./Assets/close.svg").default,
   coinbaseicon: require("./Assets/coinbaseicon.svg").default,
@@ -24,8 +24,8 @@ const images = {
   step1: require("./Assets/step1.svg").default,
   step2: require("./Assets/step2.svg").default,
   stepstick: require("./Assets/stepstick.svg").default,
-  success: require("./Assets/success.png").default,
-  tick: require("./Assets/tick.png").default,
+  success: require("./Assets/success.png"),
+  tick: require("./Assets/tick.png"),
   time: require("./Assets/time.svg").default,
   walletconnecticon: require("./Assets/walletconnecticon.svg").default,
   installedicon: require("./Assets/installedicon.svg").default,

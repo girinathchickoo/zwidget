@@ -133,9 +133,14 @@ const Exchange = React.memo(function ({
           setAllSteps({ steps: txnBody?.data?.steps, currentStep: 0 });
           handleStepText(txnBody?.data?.steps[0], "pre");
         } else {
+          console.log(txnBody, "aftertxn");
           setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
           handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
         }
+      },
+      onError: () => {
+        setAllSteps({ ...allSteps, currentStep: allSteps.currentStep + 1 });
+        handleStepText(allSteps.steps[allSteps.currentStep + 1], "pre");
       },
     }
   );
@@ -242,10 +247,34 @@ const Exchange = React.memo(function ({
     return text;
   }
 
-  const { failedimg, arrowprocess, handstep, stepstick, copy, success } =
-    images;
+  const {
+    failedimg,
+    arrowprocess,
+    backbutton,
+    handstep,
+    stepstick,
+    copy,
+    success,
+  } = images;
+  console.log(
+    !fetchStatus.isFetching,
+    fetchStatus.data?.txnStatus == "success",
+    fetchStatus.data?.txnStatus == "failed",
+    allSteps.currentStep !== allSteps.steps?.length,
+    isError,
+    "steps"
+  );
   return (
-    <div className="w-full relative h-[550px]">
+    <div className="w-full relative h-[570px]">
+      <div className="flex  relative justify-center mb-5">
+        <button
+          onClick={handleOpenExchange}
+          className="absolute left-0 top-[25%]"
+        >
+          <img src={backbutton} width={12} height={5} alt="img" />
+        </button>
+        <div className="text-base font-normal text-text-search">Exchange</div>
+      </div>
       <div className="flex justify-between items-center">
         <TokenBox
           type="Send"
