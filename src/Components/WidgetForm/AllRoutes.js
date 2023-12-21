@@ -2,7 +2,7 @@ import truncate from "../../utils/truncate";
 import RoundedButton from "../Button/RoundedButton";
 import Step from "./Step";
 import images from "../../images";
-
+import ethertousd from "../../utils/ethertousd";
 export default function AllRoutes({
   fromChain,
   routes,
@@ -31,6 +31,7 @@ export default function AllRoutes({
         </div>
         <div className="h-[500px] overflow-y-auto">
           {routes.data?.quotes?.map((item, i) => {
+            let gasObj = item?.fee?.find((item) => item.type == "network");
             return (
               <div
                 onClick={() => {
@@ -111,7 +112,16 @@ export default function AllRoutes({
                       <div className="flex items-center gap-x-1">
                         <img src={gas} width={14} height={14} alt="img" />
                         <p>
-                          $ {truncate(item.fee?.[1]?.amountInUSD || 0, 4) || 0}
+                          ${" "}
+                          {truncate(
+                            item.fee?.[1]?.amountInUSD ||
+                              ethertousd(
+                                gasObj?.amountInEther,
+                                gasObj?.token?.decimals
+                              ) ||
+                              0,
+                            4
+                          ) || 0}
                         </p>
                       </div>
                       <Step step={item.steps.length} />

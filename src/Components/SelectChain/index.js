@@ -28,17 +28,20 @@ export default function SelectChain({
       return await res.json();
     },
     {
-      enabled: chainData?.chain?.length ? false : true,
       onSuccess: (datas) => {
         let obj = {};
         datas.forEach((item) => {
-          if (item.name.toLowerCase() == "ethereum") {
+          if (
+            item.name.toLowerCase() == "ethereum" &&
+            !chainData?.chain?.length
+          ) {
             setChainData({ ...chainData, chain: item.name, ...item });
           }
         });
       },
     }
   );
+  console.log(fetchChains, chainData?.chain?.length, "chains");
   const fetchTokens = useQuery(["tokens", chainData], async function () {
     let res = await controllers.fetchTokens(chainData.chainId);
     return await res.json();
