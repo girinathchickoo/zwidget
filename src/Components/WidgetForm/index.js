@@ -177,7 +177,21 @@ export default function WidgetForm({
                 </p>
 
                 <div className="flex items-center gap-x-2">
-                  <RoundedButton classnames={"bg-background-graybutton"}>
+                  <RoundedButton
+                    callback={async () => {
+                      await routes.refetch();
+                    }}
+                    classnames={`${
+                      amount &&
+                      fromChain.chain.length &&
+                      fromCoin.coin.length &&
+                      toChain.chain.length &&
+                      toCoin.coin.length &&
+                      stopRoute
+                        ? ""
+                        : "pointer-events-none opacity-60 "
+                    } bg-background-graybutton`}
+                  >
                     <img src={refresh} width="16" height="16" alt="img" />
                   </RoundedButton>
                   <RoundedButton
