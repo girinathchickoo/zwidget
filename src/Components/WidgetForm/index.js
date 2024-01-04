@@ -38,7 +38,7 @@ export default function WidgetForm({
   const [stopRoute, setStopRoute] = useState(true);
   const [inputWidth, setInputWidth] = useState(50);
   const inputContainerRef = useRef();
-  const [slippage, setSlippage] = useState("");
+  const [slippage, setSlippage] = useState(0);
   console.log(setTimerValue, "timervalue");
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
@@ -73,6 +73,7 @@ export default function WidgetForm({
       fromCoin,
       toCoin,
       amount,
+      slippage,
     ],
     async () => {
       let res = await controllers.fetchRoutes(
@@ -107,7 +108,7 @@ export default function WidgetForm({
             data?.quotes?.[0]?.deadline ||
             data?.quotes?.[0]?.estimatedTimeInSeconds,
         });
-        setSlippage(data?.quotes?.[0]?.slippage);
+        // setSlippage(data?.quotes?.[0]?.slippage);
       },
     }
   );
@@ -298,7 +299,7 @@ export default function WidgetForm({
                             <button
                               className="text-[10px] font-normal px-1 border border-text-primary text-text-form"
                               onClick={() => {
-                                setAmount(truncate(fromCoin?.availBal, 4));
+                                setAmount(fromCoin?.availBal);
                               }}
                             >
                               Max
