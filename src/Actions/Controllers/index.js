@@ -14,10 +14,20 @@ const controllers = {
     fromCoin,
     toCoin,
     value,
-    slippage
+    slippage,
+    toChainAddress
   ) {
+    let isSolana =
+      fromChain?.chain?.toLowerCase() == "solana" ||
+      toChain?.chain?.toLowerCase() == "solana";
     return await fetch(
-      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${toChain.chainId}&fromAssetAddress=${fromCoin.address}&toAssetAddress=${toCoin.address}&inputAmount=${value}&inputAmountDisplay=${value}&outputAmount=50&userWalletAddress=${recipient}&slippage=${slippage}`
+      `${config.BACKEND}/quotes?fromChainId=${fromChain.chainId}&toChainId=${
+        toChain.chainId
+      }&fromAssetAddress=${fromCoin.address}&toAssetAddress=${
+        toCoin.address
+      }&inputAmountDisplay=${value}&userWalletAddress=${recipient}&slippage=${slippage}${
+        isSolana ? `&recipients=${toChainAddress}` : ""
+      }`
     );
   },
   async fetchTxnBody(params) {

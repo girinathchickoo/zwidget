@@ -39,6 +39,7 @@ export default function WidgetForm({
   const [inputWidth, setInputWidth] = useState(50);
   const inputContainerRef = useRef();
   const [slippage, setSlippage] = useState(0);
+  const [toChainAddress, setToChainAddress] = useState("");
   console.log(setTimerValue, "timervalue");
   const convertVal = useQuery(
     ["convert", fromCoin, toCoin],
@@ -63,7 +64,6 @@ export default function WidgetForm({
         (80 / 100) * inputContainerRef.current.offsetWidth || 70
     );
   }, [amount]);
-
   const routes = useQuery(
     [
       "routes",
@@ -74,6 +74,7 @@ export default function WidgetForm({
       toCoin,
       amount,
       slippage,
+      toChainAddress,
     ],
     async () => {
       let res = await controllers.fetchRoutes(
@@ -83,7 +84,8 @@ export default function WidgetForm({
         fromCoin,
         toCoin,
         amount,
-        slippage
+        slippage,
+        toChainAddress
       );
       return res.json();
     },
@@ -339,51 +341,60 @@ export default function WidgetForm({
                     To
                   </p>
                   <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-x-3">
-                      {toCoin.logoURI && toChain.image ? (
-                        <div className="w-[36px] h-[36px] rounded-[50%]  relative">
-                          <img src={toCoin.logoURI} alt="img" />
-                          <div className="w-[18px] h-[18px] absolute bottom-[-2px] right-[-5px] bg-background-darkgray rounded-[50%]">
-                            {" "}
-                            <img
-                              className="rounded-[50%]"
-                              src={toChain.image}
-                              alt="img"
-                            />
+                    <div>
+                      <div className="flex items-center gap-x-3">
+                        {toCoin.logoURI && toChain.image ? (
+                          <div className="w-[36px] h-[36px] rounded-[50%]  relative">
+                            <img src={toCoin.logoURI} alt="img" />
+                            <div className="w-[18px] h-[18px] absolute bottom-[-2px] right-[-5px] bg-background-darkgray rounded-[50%]">
+                              {" "}
+                              <img
+                                className="rounded-[50%]"
+                                src={toChain.image}
+                                alt="img"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="w-[36px] h-[36px] rounded-[50%] bg-background-graybutton relative">
-                          <div className="w-[18px] h-[18px] absolute bottom-[-2px] right-[-5px] bg-background-darkgray rounded-[50%]"></div>
-                        </div>
-                      )}
-                      {!toChain.chain?.length && !toChain.coin?.length ? (
-                        <div
-                          onClick={() => {
-                            setShowExchangeList("to");
-                          }}
-                          className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
-                        >
-                          <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
-                            <p>Select Token</p>
-                            <img src={down} width={9} height={4} alt="img" />
+                        ) : (
+                          <div className="w-[36px] h-[36px] rounded-[50%] bg-background-graybutton relative">
+                            <div className="w-[18px] h-[18px] absolute bottom-[-2px] right-[-5px] bg-background-darkgray rounded-[50%]"></div>
                           </div>
-                        </div>
-                      ) : (
-                        <div
-                          onClick={() => {
-                            setShowExchangeList("to");
-                          }}
-                          className="cursor-pointer"
-                        >
-                          <p className="text-base font-medium text-text-primary">
-                            {toCoin.coin}
-                          </p>
-                          <p className="text-xs font-medium text-text-primary">
-                            on {toChain.chain}
-                          </p>
-                        </div>
-                      )}
+                        )}
+                        {!toChain.chain?.length && !toChain.coin?.length ? (
+                          <div
+                            onClick={() => {
+                              setShowExchangeList("to");
+                            }}
+                            className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
+                          >
+                            <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
+                              <p>Select Token</p>
+                              <img src={down} width={9} height={4} alt="img" />
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            onClick={() => {
+                              setShowExchangeList("to");
+                            }}
+                            className="cursor-pointer"
+                          >
+                            <p className="text-base font-medium text-text-primary">
+                              {toCoin.coin}
+                            </p>
+                            <p className="text-xs font-medium text-text-primary">
+                              on {toChain.chain}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                      <input
+                        value={toChainAddress}
+                        onChange={(e) => {
+                          setToChainAddress(e.target.value);
+                        }}
+                        className="border mt-2 rounded-sm text-text-form text-sm py-[2px] px-2"
+                      />
                     </div>
                     <div className="flex w-[60%] flex-col items-end">
                       <input
