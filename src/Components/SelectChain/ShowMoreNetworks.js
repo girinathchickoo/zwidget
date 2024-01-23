@@ -1,14 +1,15 @@
 import { useState } from "react";
-
+import images from "../../images";
 export default function ShowMoreNetworks({
   data,
   handleBack,
   handleSetChainData,
   network,
-  handleClosePopup
+  handleClosePopup,
 }) {
   const [networkData, setNetworkData] = useState(data);
   const [value, setValue] = useState("");
+  const { backbutton, search } = images;
   return (
     <div>
       <div className="flex relative justify-center mb-2">
@@ -18,20 +19,30 @@ export default function ShowMoreNetworks({
           }}
           className="absolute left-0 top-[25%]"
         >
-          <img src="/backbutton.svg" width={12} height={5} alt="img" />
+          <img src={backbutton} width={12} height={5} alt="img" />
         </button>
         <div className="text-base font-normal text-text-search">Network</div>
       </div>
       <div className="relative">
-      <input
-        type={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-        }}
-        className={`text-sm px-2 w-full h-[34px] ${!value.length?"border border-border-primary":"border border-border-green"} rounded-[5px] font-normal text-text-search`}
-        placeholder="Search Network"
-      />
-      <img className="absolute right-2 bg-background-container top-2" width={16} height={16} src="/search.svg" alt="img"/>
+        <input
+          type={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+          className={`text-sm px-2 w-full h-[34px] ${
+            !value.length
+              ? "border border-border-primary"
+              : "border border-border-green"
+          } rounded-[5px] font-normal text-text-search`}
+          placeholder="Search Network"
+        />
+        <img
+          className="absolute right-2 bg-background-container top-2"
+          width={16}
+          height={16}
+          src={search}
+          alt="img"
+        />
       </div>
       <div className="h-[500px] mt-3 overflow-y-auto">
         {networkData
@@ -43,7 +54,7 @@ export default function ShowMoreNetworks({
             return (
               <div
                 onClick={() => {
-                    let newObj={...network,  chain:item.name, ...item }
+                  let newObj = { ...network, chain: item.name, ...item };
                   handleBack(item);
                   handleSetChainData(newObj);
                 }}

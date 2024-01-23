@@ -15,6 +15,7 @@ import ConfirmDetails from "../ConfirmDetails";
 import Navbar from "../Navbar";
 import ModeComp from "./ModeComp";
 import images from "../../images";
+import { debounce } from "lodash";
 export default function WidgetForm({
   selectedWallet,
   handleShowWallet,
@@ -167,6 +168,13 @@ export default function WidgetForm({
   function handleMode(mode) {
     setMode(mode);
   }
+  const debouncedSearch = debounce(function (query) {
+    setToChainAddress(query);
+  }, 1000);
+  const onChangeSearchInput = (evt) => {
+    debouncedSearch(evt.target.value);
+  };
+
   return (
     <div className="relative">
       <Navbar />
@@ -389,9 +397,10 @@ export default function WidgetForm({
                         )}
                       </div>
                       <input
-                        value={toChainAddress}
                         onChange={(e) => {
-                          setToChainAddress(e.target.value);
+                          console.log(e.target.value);
+
+                          onChangeSearchInput(e);
                         }}
                         className="border mt-2 rounded-sm text-text-form text-sm py-[2px] px-2"
                       />
