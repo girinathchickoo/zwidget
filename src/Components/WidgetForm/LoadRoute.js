@@ -25,10 +25,10 @@ export default function LoadRoute({
     }
   }, [routesData]);
   return (
-    <div className="mt-4">
+    <div className="mt-2">
       {routes.isFetching ? (
-        <>
-          <div className="flex items-center gap-x-1">
+        <div className="mb-3">
+          <div className="flex items-center gap-x-1 mb-1">
             <p className="text-sm font-normal text-text-search">Route</p>
             <img src={routeicon} width={13} height={9} alt="img" />
           </div>
@@ -36,10 +36,10 @@ export default function LoadRoute({
             <img src={refresh} width={14} height={14} alt="img" />
             Loading Route...
           </div>
-        </>
+        </div>
       ) : !isEmpty(routesData) ? (
-        <>
-          <div className="flex justify-between items-center">
+        <div className="mb-3">
+          <div className="flex justify-between items-center mb-1">
             <div className="flex items-center gap-x-1">
               <p className="text-sm font-normal text-text-search">Route</p>
               <img src={routeicon} width={13} height={9} alt="img" />
@@ -145,7 +145,7 @@ export default function LoadRoute({
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
         routes.isSuccess && (
           <div className="bg-background-form text-text-loading flrx justify-center items-center h-[80px] relative flex flex-col  border border-border-primary">

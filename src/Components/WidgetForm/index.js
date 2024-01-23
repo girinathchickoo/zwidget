@@ -174,7 +174,7 @@ export default function WidgetForm({
   const onChangeSearchInput = (evt) => {
     debouncedSearch(evt.target.value);
   };
-
+  console.log(routesData, routes.data, "data");
   return (
     <div className="relative">
       <Navbar />
@@ -215,10 +215,10 @@ export default function WidgetForm({
                 </div>
               </div>
               <div className="border rounded-md border-border-primary bg-background-form">
-                <div className="py-2 px-3 mb-5">
-                  <p className="text-sm font-medium text-text-primary mb-2">
+                <div className="py-2 px-3 mb-5 min-h-[96px]">
+                  {/* <p className="text-sm font-medium text-text-primary mb-2">
                     From
-                  </p>
+                  </p> */}
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-x-3">
                       {fromCoin.logoURI && fromChain.image ? (
@@ -239,15 +239,17 @@ export default function WidgetForm({
                         </div>
                       )}
                       {!fromChain.chain?.length && !fromCoin.coin?.length ? (
-                        <div
-                          onClick={() => {
-                            setShowExchangeList("from");
-                          }}
-                          className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
-                        >
-                          <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
-                            <p>Select Token</p>
-                            <img src={down} width={9} height={4} alt="img" />
+                        <div className="flex items-center h-[60px]">
+                          <div
+                            onClick={() => {
+                              setShowExchangeList("from");
+                            }}
+                            className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
+                          >
+                            <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
+                              <p>Select Token</p>
+                              <img src={down} width={9} height={4} alt="img" />
+                            </div>
                           </div>
                         </div>
                       ) : (
@@ -283,7 +285,7 @@ export default function WidgetForm({
                         }}
                         style={{ width: inputWidth }}
                         placeholder="0.0"
-                        className="text-3xl ml-auto mb-1 pl-1 min-w-[70px] max-w-[180px]  font-normal text-text-[#5C5C5C] bg-transparent"
+                        className="text-3xl ml-auto mb-1 text-right pl-1 min-w-[70px] max-w-[180px]  font-normal placeholder:text-[#5C5C5C] text-[#5C5C5C] bg-transparent"
                       />
                       <div className="flex items-center gap-x-1">
                         <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">
@@ -344,10 +346,10 @@ export default function WidgetForm({
                     />
                   </RoundedButton>
                 </div>
-                <div className="py-5 pb-5 px-3 mb-5">
-                  <p className="text-sm  font-medium text-text-primary mb-2">
+                <div className="py-5 pb-6 px-3">
+                  {/* <p className="text-sm  font-medium text-text-primary mb-2">
                     To
-                  </p>
+                  </p> */}
                   <div className="flex justify-between items-center">
                     <div>
                       <div className="flex items-center gap-x-3">
@@ -369,15 +371,22 @@ export default function WidgetForm({
                           </div>
                         )}
                         {!toChain.chain?.length && !toChain.coin?.length ? (
-                          <div
-                            onClick={() => {
-                              setShowExchangeList("to");
-                            }}
-                            className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
-                          >
-                            <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
-                              <p>Select Token</p>
-                              <img src={down} width={9} height={4} alt="img" />
+                          <div className="h-[60px] flex items-center">
+                            <div
+                              onClick={() => {
+                                setShowExchangeList("to");
+                              }}
+                              className={` p-[1px] cursor-pointer ${styles.gradientborder} rounded-[20px] w-max`}
+                            >
+                              <div className="text-sm font-medium w-max bg-background-form rounded-[20px] flex justify-center gap-x-2 px-3 text-text-form">
+                                <p>Select Token</p>
+                                <img
+                                  src={down}
+                                  width={9}
+                                  height={4}
+                                  alt="img"
+                                />
+                              </div>
                             </div>
                           </div>
                         ) : (
@@ -396,30 +405,32 @@ export default function WidgetForm({
                           </div>
                         )}
                       </div>
-                      <input
+                      {/* <input
                         onChange={(e) => {
                           console.log(e.target.value);
 
                           onChangeSearchInput(e);
                         }}
                         className="border mt-2 rounded-sm text-text-form text-sm py-[2px] px-2"
-                      />
+                      /> */}
                     </div>
                     <div className="flex w-[60%] flex-col items-end">
                       <input
                         disabled
                         autoFocus
-                        value={truncate(
-                          routesData?.minOutputAmount ||
-                            routesData.outputAmountDisplay ||
-                            0,
-                          6
-                        )}
+                        value={
+                          truncate(
+                            routesData?.minOutputAmount ||
+                              routesData.outputAmountDisplay ||
+                              0,
+                            6
+                          ) || ""
+                        }
                         onChange={(e) => {
                           setToAmount(e.target.value);
                         }}
-                        placeholder="0.0"
-                        className="text-3xl text-right  w-full ml-auto mb-1 pl-1  font-normal text-text-[#5C5C5C] bg-transparent"
+                        placeholder="- -"
+                        className="text-3xl text-right  w-full ml-auto mb-1 pl-1  font-normal placeholder:text-[#5C5C5C] text-[#5C5C5C] bg-transparent"
                       />
                       <div className="flex items-center gap-x-1">
                         <div className="flex flex-col text-text-primary  justify-center items-center w-max gap-y-1">
@@ -441,13 +452,17 @@ export default function WidgetForm({
                   </div>
                 </div>
               </div>
-              <ModeComp
-                handleMode={handleMode}
-                mode={mode}
-                slippage={slippage}
-                setSlippage={setSlippage}
-                routesData={routesData}
-              />
+              {routes?.data?.quotes?.length ? (
+                <ModeComp
+                  handleMode={handleMode}
+                  mode={mode}
+                  slippage={slippage}
+                  setSlippage={setSlippage}
+                  routesData={routesData}
+                />
+              ) : (
+                <></>
+              )}
               <div>
                 <LoadRoute
                   routes={routes}
@@ -463,7 +478,7 @@ export default function WidgetForm({
                 />
               </div>
               <button
-                className={`w-full h-[52px] mt-6 ${styles.gradientbutton} text-2xl font-bold text-text-button`}
+                className={`w-full h-[52px] mt-3   ${styles.gradientbutton} text-2xl font-bold text-text-button`}
                 onClick={() => {
                   !isConnected
                     ? handleShowWallet(true)

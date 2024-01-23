@@ -6,7 +6,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
 
   const { info, edit, down, greentick } = images;
   return (
-    <div className="mt-4 border-b border-border-mode pb-1 ">
+    <div className="mt-3 border-b border-border-mode pb-1 ">
       <p className="text-sm font-medium text-text-form mb-1">Mode</p>
       <div className="flex gap-x-1 w-full">
         <div
@@ -14,7 +14,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
             handleMode("Classic");
           }}
           className={`w-1/2 ${
-            mode == "Classic" ? "h-[120px]" : "h-max"
+            mode == "Classic" ? "h-[110px]" : "h-max"
           } relative`}
         >
           <div
@@ -59,7 +59,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
             )}
           </div>
           {mode == "Classic" ? (
-            <div className="flex min-h-[86px] absolute border shadow-sm rounded-sm h-max mt-14 top-[-1px] border-border-mode w-[400px] justify-between items-center px-5 py-3">
+            <div className="flex min-h-[40px] absolute border shadow-sm rounded-sm h-max mt-14 top-[-1px] border-border-mode w-[400px] justify-between items-center px-5 ">
               <div className=" ">
                 <p className="text-sm w-max mb-1 border-b border-border-secondary border-dashed font-medium text-text-primary">
                   Network Gas:
@@ -94,7 +94,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
             handleMode("Gasless");
           }}
           className={`w-1/2 ${
-            mode == "Gasless" ? "h-[120px]" : "h-max"
+            mode == "Gasless" ? "h-[110px]" : "h-max"
           } relative`}
         >
           <div
@@ -138,7 +138,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
           </div>
 
           {mode == "Gasless" ? (
-            <div className="flex absolute border shadow-sm rounded-sm h-max mt-14 gap-x-3  bottom-[-40%] top-[-1px] border-border-mode w-[400px] left-[-100.5%] justify-between items-center px-2 py-3">
+            <div className="flex absolute border shadow-sm rounded-sm h-max mt-14 gap-x-3  bottom-[-40%] top-[-1px] border-border-mode w-[400px] left-[-100.5%] justify-between items-center px-2 ">
               <div className=" ">
                 <p className="text-sm w-max mb-1 border-b border-border-secondary border-dashed font-medium text-text-primary">
                   Settlement Fees
@@ -147,7 +147,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
                   0.156 WETH
                 </p>
               </div>
-              <div className="text-sm font-normal text-text-primary">
+              <div className="text-xs font-normal text-text-primary">
                 We submit the transaction & all fees are deducted from the
                 output token instead of Native Gas.{" "}
                 <span className="bg-gradient-to-r from-[#2CFFE4] to-[#A45EFF] bg-clip-text cursor-pointer text-transparent">
@@ -160,9 +160,9 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
           )}
         </div>
       </div>
-      <div className="flex my-4 mt-8 items-center justify-between">
+      <div className="flex my-2  items-center justify-between">
         <div>
-          <div className="flex items-center mb-2 gap-x-1">
+          <div className="flex items-center mb-1 gap-x-1">
             <p className="text-sm font-normal  text-text-form">
               Slippage Tolerance
             </p>
@@ -208,7 +208,7 @@ export default function ModeComp({ handleMode, mode, slippage, setSlippage }) {
           </div>
         </div>
         <div>
-          <div className="flex items-center mb-2 gap-x-1">
+          <div className="flex items-center mb-1 gap-x-1">
             <p className="text-sm font-normal  text-text-form">Price Impact</p>
             <button className="bg-transparent">
               <img src={info} width={14} height={14} alt="img" />

@@ -20,7 +20,7 @@ export default function SelectChain({
 }) {
   const [showMoreNetwork, setShowMoreNetwork] = useState(false);
   const [value, setValue] = useState("");
-
+  const [topChains, setTopChains] = useState([]);
   const fetchChains = useQuery(
     "chains",
     async function () {
@@ -30,6 +30,7 @@ export default function SelectChain({
     {
       onSuccess: (datas) => {
         let obj = {};
+        setTopChains(datas.slice(0, 9));
         datas.forEach((item) => {
           if (
             item.name.toLowerCase() == "ethereum" &&
@@ -41,7 +42,7 @@ export default function SelectChain({
       },
     }
   );
-  console.log(fetchChains, chainData?.chain?.length, "chains");
+  // console.log(fetchChains, chainData?.chain?.length, "chains");
   const fetchTokens = useQuery(["tokens", chainData], async function () {
     let res = await controllers.fetchTokens(chainData.chainId);
     return await res.json();
@@ -75,7 +76,17 @@ export default function SelectChain({
     console.log(data, "set");
     setChainData(data);
   }
-  console.log(fromChain, toChain, "chsin");
+  useEffect(() => {
+    let topChainTemp = [...topChains];
+    let isChainPresent = topChainTemp.find((item) => {
+      return item.chainId == chainData.chainId;
+    });
+    if (!isChainPresent) {
+      topChainTemp.pop();
+      topChainTemp.push(chainData);
+      setTopChains(topChainTemp);
+    }
+  }, [chainData]);
   const { search, close, tick } = images;
   return showMoreNetwork ? (
     <ShowMoreNetworks
@@ -105,7 +116,7 @@ export default function SelectChain({
           <div className="text-base font-normal text-text-search">Network</div>
         </div>
         <div className="flex flex-wrap gap-x-2 gap-y-5 overflow-y-auto">
-          {fetchChains?.data?.slice(0, 9).map((item, i) => {
+          {topChains?.map((item, i) => {
             console.log(chainData.name, item.name);
             return (
               <div
@@ -143,7 +154,7 @@ export default function SelectChain({
                         : "text-text-primary font-normal"
                     }`}
                   >
-                    {item.name.length > 7
+                    {item.name?.length > 7
                       ? item.name.substring(0, 7) + ".."
                       : item.name}
                   </p>

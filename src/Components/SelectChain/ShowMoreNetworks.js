@@ -46,7 +46,6 @@ export default function ShowMoreNetworks({
       </div>
       <div className="h-[500px] mt-3 overflow-y-auto">
         {networkData
-          .slice(9, networkData.length)
           .filter((item) => {
             return item.name.toLowerCase().includes(value.toLowerCase());
           })
