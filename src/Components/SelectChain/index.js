@@ -193,7 +193,7 @@ export default function SelectChain({
                 ? "border border-border-primary"
                 : "border border-border-green"
             } rounded-[5px] font-normal text-text-search`}
-            placeholder="Search Network"
+            placeholder="Search Token"
           />
           <img
             className="absolute right-2 bg-background-container top-2"
