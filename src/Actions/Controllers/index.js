@@ -26,7 +26,7 @@ const controllers = {
       }&fromAssetAddress=${fromCoin.address}&toAssetAddress=${
         toCoin.address
       }&inputAmountDisplay=${value}&userWalletAddress=${recipient}&slippage=${slippage}${
-        isSolana ? `&recipients=${toChainAddress}` : ""
+        isSolana ? `&recipient=${toChainAddress}` : ""
       }`
     );
   },
