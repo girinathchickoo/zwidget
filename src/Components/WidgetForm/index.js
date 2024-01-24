@@ -405,14 +405,14 @@ export default function WidgetForm({
                           </div>
                         )}
                       </div>
-                      {/* <input
+                      <input
                         onChange={(e) => {
                           console.log(e.target.value);
 
                           onChangeSearchInput(e);
                         }}
                         className="border mt-2 rounded-sm text-text-form text-sm py-[2px] px-2"
-                      /> */}
+                      />
                     </div>
                     <div className="flex w-[60%] flex-col items-end">
                       <input
